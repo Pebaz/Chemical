@@ -17,3 +17,6 @@ class it:
 
     def take(self, num_items):
         return it(next(self.items) for i in range(num_items))
+
+    def all(self, func):
+        return all(func(i) for i in self.items)
