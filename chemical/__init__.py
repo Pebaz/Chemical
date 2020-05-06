@@ -12,10 +12,11 @@ class it:
         return next(self.items)
 
     def skip(self, times):
-        skip = it(i for i in self)
-        for _ in range(times):
-            next(skip)
-        return skip
+        # skip = it(i for i in self)
+        # for _ in range(times):
+        #     next(skip)
+        # return skip
+        return Skip(self.items, times)
 
     def take(self, num_items):
         return it(next(self.items) for i in range(num_items))
@@ -53,13 +54,21 @@ class Step(it):
 
     def __next__(self):
         nxt = next(self.items)
-        print('->', nxt)
         try:
             for _ in range(self.step - 1):
                 next(self.items)
         except StopIteration:
             pass
         return nxt
+
+
+class Skip(it):
+    def __init__(self, items, times):
+        it.__init__(self, items)
+        self.times = times
+        for _ in range(times):
+            next(self)
+
 
 
 class Scan(it):
@@ -70,3 +79,16 @@ class Scan(it):
 
     def __next__(self):
         return self.closure(self.seed, next(self.items))
+
+
+for class_ in list(globals().values()):
+    if isinstance(class_, type) and issubclass(class_, it):
+        if class_ == it: continue
+
+        def wrapper(clazz):
+            def inner(*args, **kwargs):
+                nonlocal clazz
+                return clazz(*args, **kwargs)
+            return inner
+
+        setattr(it, class_.__name__.lower(), wrapper(class_))
