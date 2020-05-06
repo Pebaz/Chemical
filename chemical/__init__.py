@@ -92,3 +92,7 @@ for class_ in list(globals().values()):
             return inner
 
         setattr(it, class_.__name__.lower(), wrapper(class_))
+
+
+# Allow people to write custom additions that can introspect themselves
+# onto the it class
