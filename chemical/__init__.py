@@ -1,9 +1,17 @@
 
-
-
 class it:
+    traits = {}
+
     def __init__(self, items):
         self.items = iter(items)
+
+    def __getattr__(self, name):
+        print(name)
+        clazz = it.traits[name]
+        def wrap(*args, **kwargs):
+            nonlocal clazz
+            return clazz(self.items, *args, **kwargs)
+        return wrap
 
     def __iter__(self):
         return self
@@ -11,12 +19,12 @@ class it:
     def __next__(self):
         return next(self.items)
 
-    def skip(self, times):
-        # skip = it(i for i in self)
-        # for _ in range(times):
-        #     next(skip)
-        # return skip
-        return Skip(self.items, times)
+    # def skip(self, times):
+    #     # skip = it(i for i in self)
+    #     # for _ in range(times):
+    #     #     next(skip)
+    #     # return skip
+    #     return Skip(self.items, times)
 
     def take(self, num_items):
         return it(next(self.items) for i in range(num_items))
@@ -46,6 +54,27 @@ class it:
     def step_by(self, step):
         return Step(self.items, step)
 
+    def collect(self, into=list):
+        return into(self)
+
+    def step(self, times):
+        return Step(self.items, times)
+
+
+def trait(bind=None):
+    def inner(*args, **kwargs):
+        nonlocal bind
+        return bind(*args, **kwargs)
+    def wrapper(clazz):
+        nonlocal bind
+        it.traits[bind] = clazz
+        return clazz
+    if isinstance(bind, str):
+        return wrapper
+    else:
+        it.traits[bind.__name__] = bind
+        return inner
+
 
 class Step(it):
     def __init__(self, items, step):
@@ -62,6 +91,7 @@ class Step(it):
         return nxt
 
 
+@trait('skip_it')
 class Skip(it):
     def __init__(self, items, times):
         it.__init__(self, items)
@@ -69,7 +99,7 @@ class Skip(it):
         for _ in range(times):
             next(self)
 
-
+print(it.traits)
 
 class Scan(it):
     def __init__(self, items, seed, closure):
@@ -81,17 +111,17 @@ class Scan(it):
         return self.closure(self.seed, next(self.items))
 
 
-for class_ in list(globals().values()):
-    if isinstance(class_, type) and issubclass(class_, it):
-        if class_ == it: continue
+# for class_ in list(globals().values()):
+#     if isinstance(class_, type) and issubclass(class_, it):
+#         if class_ == it: continue
 
-        def wrapper(clazz):
-            def inner(*args, **kwargs):
-                nonlocal clazz
-                return clazz(*args, **kwargs)
-            return inner
+#         def wrapper(clazz):
+#             def inner(*args, **kwargs):
+#                 nonlocal clazz
+#                 return clazz(*args, **kwargs)
+#             return inner
 
-        setattr(it, class_.__name__.lower(), wrapper(class_))
+#         setattr(it, class_.__name__.lower(), wrapper(class_))
 
 
 # Allow people to write custom additions that can introspect themselves
