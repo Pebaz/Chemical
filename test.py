@@ -29,5 +29,8 @@ print(it([1, 2, 3, 4, 5]).nth(1))
 print(list(it(range(10)).step_by(3).skip(1).take(2)))
 '''
 
-for i in it(range(10)).step(2).skip_it(2):
+for i in it(range(10)).step_by(2).collect(list):
     print(i)
+
+print(it(range(10)).step_by(2).collect(lambda items: {i : i for i in items}))
+print(it(range(10)).step_by(2).skip(1).collect())

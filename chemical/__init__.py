@@ -6,11 +6,10 @@ class it:
         self.items = iter(items)
 
     def __getattr__(self, name):
-        print(name)
         clazz = it.traits[name]
         def wrap(*args, **kwargs):
             nonlocal clazz
-            return clazz(self.items, *args, **kwargs)
+            return clazz(self, *args, **kwargs)
         return wrap
 
     def __iter__(self):
@@ -51,14 +50,14 @@ class it:
     def scan(self, seed, closure):
         return Scan(self.items, seed, closure)
 
-    def step_by(self, step):
-        return Step(self.items, step)
+    # def step_by(self, step):
+    #     return Step(self.items, step)
 
     def collect(self, into=list):
         return into(self)
 
-    def step(self, times):
-        return Step(self.items, times)
+    # def step(self, times):
+    #     return Step(self.items, times)
 
 
 def trait(bind=None):
@@ -72,10 +71,11 @@ def trait(bind=None):
     if isinstance(bind, str):
         return wrapper
     else:
-        it.traits[bind.__name__] = bind
+        it.traits[bind.__name__.lower()] = bind
         return inner
 
 
+@trait('step_by')
 class Step(it):
     def __init__(self, items, step):
         it.__init__(self, items)
@@ -91,13 +91,18 @@ class Step(it):
         return nxt
 
 
-@trait('skip_it')
+@trait
 class Skip(it):
     def __init__(self, items, times):
         it.__init__(self, items)
         self.times = times
         for _ in range(times):
             next(self)
+
+@trait
+class Collect(it):
+    def __init__(self, items, into=list):
+        return into(items)
 
 print(it.traits)
 
