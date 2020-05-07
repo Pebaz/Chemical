@@ -34,3 +34,10 @@ for i in it(range(10)).step_by(2).collect(list):
 
 print(it(range(10)).step_by(2).collect(lambda items: {i : i for i in items}))
 print(it(range(10)).step_by(2).skip(1).collect())
+print(list(range(10))[2::2])
+
+print()
+
+print(it(range(10)).step_by(2).collect())
+print(it(range(10)).step_by(2).nth(3))
+print(it(range(10)).step_by(2).nth(3))

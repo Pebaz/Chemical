@@ -1,5 +1,10 @@
 
 class it:
+    """
+    You can extend `it` with methods that produce iterators and methods that
+    produce a value. Decorate a class or a function with `trait` respectively to
+    get this to work.
+    """
     traits = {}
 
     def __init__(self, items):
@@ -27,12 +32,6 @@ class it:
 
     def take(self, num_items):
         return it(next(self.items) for i in range(num_items))
-
-    def nth(self, num):
-        for _ in range(num):
-            item = next(self.items)
-        if num > 0:
-            return item
 
     def last(self):
         for item in self.items: ...
@@ -99,10 +98,19 @@ class Skip(it):
         for _ in range(times):
             next(self)
 
+
 @trait
 class Collect(it):
     def __init__(self, items, into=list):
         return into(items)
+
+
+@trait
+def nth(self, num):
+    item = None
+    for _ in range(num):
+        item = next(self)
+    return item
 
 print(it.traits)
 
