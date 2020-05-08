@@ -108,6 +108,6 @@ def last(self):
 
 
 @trait
-def take(self, amount):
+def take(self, num_items):
     return it(next(self) for i in range(num_items))
 
