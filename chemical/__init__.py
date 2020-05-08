@@ -10,6 +10,16 @@ class it:
     def __init__(self, items):
         self.items = iter(items)
 
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        return next(self.items)
+
+    def __dir__(self):
+        from itertools import chain
+        return sorted(set(chain(self.__dict__.keys(), self.traits.keys())))
+
     def __getattr__(self, name):
         clazz = it.traits[name]
         def wrap(*args, **kwargs):
@@ -17,61 +27,22 @@ class it:
             return clazz(self, *args, **kwargs)
         return wrap
 
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        return next(self.items)
-
-    # def skip(self, times):
-    #     # skip = it(i for i in self)
-    #     # for _ in range(times):
-    #     #     next(skip)
-    #     # return skip
-    #     return Skip(self.items, times)
-
-    def take(self, num_items):
-        return it(next(self.items) for i in range(num_items))
-
-    def last(self):
-        for item in self.items: ...
-        return item
-
-    def all(self, func):
-        return all(func(i) for i in self.items)
-
-    def product(self):
-        def mul(state, x):
-            state *= x
-            return state
-        return Scan(self.items, 1, mul).last()
-
-    def scan(self, seed, closure):
-        return Scan(self.items, seed, closure)
-
-    # def step_by(self, step):
-    #     return Step(self.items, step)
-
-    def collect(self, into=list):
-        return into(self)
-
-    # def step(self, times):
-    #     return Step(self.items, times)
-
 
 def trait(bind=None):
     def inner(*args, **kwargs):
         nonlocal bind
         return bind(*args, **kwargs)
+
     def wrapper(clazz):
         nonlocal bind
         it.traits[bind] = clazz
         return clazz
+
     if isinstance(bind, str):
         return wrapper
-    else:
-        it.traits[bind.__name__.lower()] = bind
-        return inner
+
+    it.traits[bind.__name__.lower()] = bind
+    return inner
 
 
 @trait('step_by')
@@ -88,6 +59,11 @@ class Step(it):
         except StopIteration:
             pass
         return nxt
+
+
+@trait
+def all(self, func):
+    return all(func(i) for i in self.items)
 
 
 @trait
@@ -112,30 +88,26 @@ def nth(self, num):
         item = next(self)
     return item
 
-print(it.traits)
 
-class Scan(it):
-    def __init__(self, items, seed, closure):
-        it.__init__(self, items)
-        self.seed = seed
-        self.closure = closure
-
-    def __next__(self):
-        return self.closure(self.seed, next(self.items))
+@trait
+def count(self):
+    return len(list(self))
 
 
-# for class_ in list(globals().values()):
-#     if isinstance(class_, type) and issubclass(class_, it):
-#         if class_ == it: continue
-
-#         def wrapper(clazz):
-#             def inner(*args, **kwargs):
-#                 nonlocal clazz
-#                 return clazz(*args, **kwargs)
-#             return inner
-
-#         setattr(it, class_.__name__.lower(), wrapper(class_))
+@trait
+def collect(self, into=list):
+    return into(self)
 
 
-# Allow people to write custom additions that can introspect themselves
-# onto the it class
+@trait
+def last(self):
+    item = None
+    for i in self:
+        item = i
+    return item
+
+
+@trait
+def take(self, amount):
+    return it(next(self) for i in range(num_items))
+
