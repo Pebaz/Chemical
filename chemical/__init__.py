@@ -27,6 +27,9 @@ class it:
             return clazz(self, *args, **kwargs)
         return wrap
 
+    def next(self):
+        return next(self)
+
 
 def trait(bind=None):
     def inner(*args, **kwargs):
@@ -111,3 +114,22 @@ def last(self):
 def take(self, num_items):
     return it(next(self) for i in range(num_items))
 
+
+@trait
+class Peekable(it):
+    def __init__(self, items):
+        it.__init__(self, items)
+        self.ahead = None
+
+    def peek(self):
+        if not self.ahead:
+            next(self)
+        return self.ahead
+
+    def __next__(self):
+        ret = self.ahead
+        try:
+            self.ahead = next(self.items)
+        except StopIteration:
+            ...
+        return ret
