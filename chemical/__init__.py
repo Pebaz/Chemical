@@ -120,16 +120,31 @@ class Peekable(it):
     def __init__(self, items):
         it.__init__(self, items)
         self.ahead = None
+        self.done = False
 
     def peek(self):
+        if self.done:
+            raise StopIteration()
         if not self.ahead:
-            next(self)
+            self.ahead = next(self.items)
         return self.ahead
 
     def __next__(self):
+        if self.done:
+            raise StopIteration()
+
+        try:
+            if not self.ahead:
+                self.ahead = next(self.items)
+        except StopIteration:
+            ...
+
         ret = self.ahead
         try:
             self.ahead = next(self.items)
         except StopIteration:
-            ...
+            self.done = True
+            return ret
+
         return ret
+
