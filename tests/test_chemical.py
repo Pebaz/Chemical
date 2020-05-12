@@ -26,10 +26,25 @@ def test_peekable():
 
     assert i.peek() == xs[0]
     assert i.next() == xs[0]
-    
+
     assert i.next() == xs[1]
-    
+
     assert i.peek() == xs[2]
     assert i.peek() == xs[2]
 
     assert i.next() == xs[2]
+
+def test_max():
+    assert it((1, 2, 3, 4)).max() == 4
+    assert it('asdf').max() == 's'
+
+    class MyItem:
+        def __init__(self, val):
+            self.val = val
+        def __gt__(self, other):
+            return self.val > other.val
+        def __eq__(self, other):
+            return self.val == other.val
+
+    assert it((MyItem(1), MyItem(2), MyItem(3))).max() == MyItem(3)
+

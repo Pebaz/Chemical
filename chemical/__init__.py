@@ -1,4 +1,12 @@
 
+class ChemicalException(Exception):
+    "Base class for all Chemical Exceptions"
+
+
+class TraitException(ChemicalException):
+    "Any error having to do with traits"
+
+
 class it:
     """
     You can extend `it` with methods that produce iterators and methods that
@@ -9,6 +17,9 @@ class it:
 
     def __init__(self, items):
         self.items = iter(items)
+
+    def __str__(self):
+        return f'<{self.__class__.__name__} object at {hex(id(self))}>'
 
     def __iter__(self):
         return self
@@ -21,10 +32,18 @@ class it:
         return sorted(set(chain(self.__dict__.keys(), self.traits.keys())))
 
     def __getattr__(self, name):
+        if name not in it.traits:
+            raise TraitException(
+                f'Trait or extension method "{name}" not found for {self}.'
+            )
+
         clazz = it.traits[name]
+
         def wrap(*args, **kwargs):
+            "Wrapper to always pass self. Acts as both items and self object."
             nonlocal clazz
             return clazz(self, *args, **kwargs)
+
         return wrap
 
     def next(self):
@@ -147,4 +166,9 @@ class Peekable(it):
             return ret
 
         return ret
+
+
+@trait('max')
+def maximum_value(self):
+    return max(self)
 
