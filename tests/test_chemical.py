@@ -1,6 +1,15 @@
 from chemical import it
 
 
+class MyItem:
+    def __init__(self, val):
+        self.val = val
+    def __gt__(self, other):
+        return self.val > other.val
+    def __eq__(self, other):
+        return self.val == other.val
+
+
 def test_it():
     assert list(it(range(3))) == [0, 1, 2]
     assert list(it('abc')) == ['a', 'b', 'c']
@@ -37,14 +46,11 @@ def test_peekable():
 def test_max():
     assert it((1, 2, 3, 4)).max() == 4
     assert it('asdf').max() == 's'
-
-    class MyItem:
-        def __init__(self, val):
-            self.val = val
-        def __gt__(self, other):
-            return self.val > other.val
-        def __eq__(self, other):
-            return self.val == other.val
-
     assert it((MyItem(1), MyItem(2), MyItem(3))).max() == MyItem(3)
+
+
+def test_min():
+    assert it((1, 2, 3, 4)).min() == 1
+    assert it('asdf').min() == 'a'
+    assert it((MyItem(1), MyItem(2), MyItem(3))).min() == MyItem(1)
 

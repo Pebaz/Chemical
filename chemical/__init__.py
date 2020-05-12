@@ -172,3 +172,8 @@ class Peekable(it):
 def maximum_value(self):
     return max(self)
 
+
+@trait('min')
+def minimum_value(self):
+    return min(self)
+
