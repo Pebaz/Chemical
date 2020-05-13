@@ -39,12 +39,7 @@ class it:
 
         clazz = it.traits[name]
 
-        def wrap(*args, **kwargs):
-            "Wrapper to always pass self. Acts as both items and self object."
-            nonlocal clazz
-            return clazz(self, *args, **kwargs)
-
-        class wrapp:
+        class wrap:
             def __init__(self, items, clazz, name):
                 self.items = items
                 self.clazz = clazz
@@ -57,9 +52,7 @@ class it:
             def __call__(self, *args, **kwargs):
                 return self.clazz(self.items, *args, **kwargs)
 
-        return wrapp(self, clazz, name)
-
-        return wrap
+        return wrap(self, clazz, name)
 
     def next(self):
         return next(self)
