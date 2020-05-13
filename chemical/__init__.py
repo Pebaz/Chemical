@@ -44,6 +44,21 @@ class it:
             nonlocal clazz
             return clazz(self, *args, **kwargs)
 
+        class wrapp:
+            def __init__(self, items, clazz, name):
+                self.items = items
+                self.clazz = clazz
+                self.name = name
+
+            def __repr__(self):
+                hid = hex(id(self.clazz))
+                return f'<{self.__module__}.it.{self.name} at {hid}>'
+
+            def __call__(self, *args, **kwargs):
+                return self.clazz(self.items, *args, **kwargs)
+
+        return wrapp(self, clazz, name)
+
         return wrap
 
     def next(self):
