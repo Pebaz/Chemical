@@ -84,6 +84,18 @@ class Step(it):
 
 
 @trait
+class Filter(it):
+    def __init__(self, items, filter_func):
+        it.__init__(self, items)
+        self.filter_func = filter_func
+
+    def __next__(self):
+        while res := next(self.items):
+            if self.filter_func(res):
+                return res
+
+
+@trait
 def all(self, func):
     return all(func(i) for i in self.items)
 
@@ -168,12 +180,9 @@ class Peekable(it):
         return ret
 
 
-@trait('max')
-def maximum_value(self):
-    return max(self)
+trait('max')(lambda self: max(self))
+trait('min')(lambda self: min(self))
 
-
-@trait('min')
-def minimum_value(self):
-    return min(self)
+from itertools import chain
+trait('chain')(lambda self, collection: it(chain(self, collection)))
 

@@ -54,3 +54,13 @@ def test_min():
     assert it('asdf').min() == 'a'
     assert it((MyItem(1), MyItem(2), MyItem(3))).min() == MyItem(1)
 
+
+def test_chain():
+    assert it((1, 2, 3)).chain((4, 5, 6)).collect() == [1, 2, 3, 4, 5, 6]
+    assert it('as').chain((3.1, 2.4)).collect() == ['a', 's', 3.1, 2.4]
+
+
+def test_filter():
+    func = lambda x: x > 2; data = 1, 2, 3, 4, 5
+    assert it(data).filter(func).collect() == list(filter(func, data))
+
