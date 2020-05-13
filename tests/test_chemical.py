@@ -64,3 +64,8 @@ def test_filter():
     func = lambda x: x > 2; data = 1, 2, 3, 4, 5
     assert it(data).filter(func).collect() == list(filter(func, data))
 
+
+def test_cycle():
+    assert it(range(3)).cycle().take(6).collect() == [0, 1, 2, 0, 1, 2]
+    assert it('abc').cycle().take(6).collect() == ['a', 'b', 'c', 'a', 'b', 'c']
+

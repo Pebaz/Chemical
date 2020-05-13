@@ -183,6 +183,8 @@ class Peekable(it):
 trait('max')(lambda self: max(self))
 trait('min')(lambda self: min(self))
 
-from itertools import chain
+from itertools import chain, cycle
+
 trait('chain')(lambda self, collection: it(chain(self, collection)))
+trait('cycle')(lambda self: it(cycle(self)))
 
