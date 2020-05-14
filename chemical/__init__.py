@@ -15,7 +15,7 @@ class it:
     """
     traits = {}
 
-    def __init__(self, items):
+    def __init__(self, items=[]):
         self.items = iter(items)
 
     def __str__(self):
@@ -24,12 +24,16 @@ class it:
     def __iter__(self):
         return self
 
+    def __reversed__(self):
+        raise Exception('NOT IMPLEMENTED')
+
     def __next__(self):
         return next(self.items)
 
     def __dir__(self):
         from itertools import chain
-        return sorted(set(chain(self.__dict__.keys(), self.traits.keys())))
+        keys = set(self.__dict__.keys()) ^ {'items'}
+        return sorted(set(chain(keys, self.traits.keys())))
 
     def __getattr__(self, name):
         if name not in it.traits:
@@ -103,9 +107,9 @@ class Filter(it):
                 return res
 
 
-@trait
-def all(self, func):
-    return all(func(i) for i in self.items)
+@trait('all')
+def all_items_eval_to_true(self, func):
+    return all(func(i) for i in self)
 
 
 @trait

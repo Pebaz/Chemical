@@ -15,6 +15,12 @@ def test_it():
     assert list(it('abc')) == ['a', 'b', 'c']
 
 
+def test_take():
+    assert it('abcdefg').take(2).collect() == ['a', 'b']
+    assert it('abcdefg').skip(2).take(2).collect() == ['c', 'd']
+    assert it('abcdefg').step_by(2).take(3).collect() == ['a', 'c', 'e']
+
+
 def test_collect():
     assert it(range(3)).collect() == [0, 1, 2]
     assert it(range(3)).collect(tuple) == (0, 1, 2)
@@ -68,4 +74,34 @@ def test_filter():
 def test_cycle():
     assert it(range(3)).cycle().take(6).collect() == [0, 1, 2, 0, 1, 2]
     assert it('abc').cycle().take(6).collect() == ['a', 'b', 'c', 'a', 'b', 'c']
+
+
+def test_all():
+    assert not it('asdf').all(lambda x: x > 'a')
+    assert it('bsdf').all(lambda x: x > 'a')
+
+
+def test_count():
+    assert it('abc').count() == 3
+    assert it('abc').skip(1).count() == 2
+    assert it('abc').skip(1).take(2).count() == 2
+
+
+def test_last():
+    assert it('abc').last() == 'c'
+    assert it('abc').skip(1).last() == 'c'
+    assert it('abc').cycle().take(8).last() == 'b'
+
+
+def test_nth():
+    assert it('abc').nth(3) == 'c'
+    assert it('abc').skip(1).nth(2) == 'c'
+    assert it('abc').cycle().nth(23) == 'b'
+
+
+def test_step():
+    assert it('abcdef').step_by(1).collect() == ['a', 'b', 'c', 'd', 'e', 'f']
+    assert it('abcdef').step_by(2).collect() == ['a', 'c', 'e']
+    assert it('abcdef').step_by(3).collect() == ['a', 'd']
+    assert it('abcdef').cycle().step_by(3).nth(17) == 'a'
 
