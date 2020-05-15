@@ -266,3 +266,38 @@ trait('le')(
     lambda self, other: self.cmp(other) in (Ordering.Less, Ordering.Equal)
 )
 
+
+@trait
+def eq(self, other):
+    """
+    Although this would be simpler:
+    >>> return self.collect() == it(other).collect()
+
+    This is more efficient given that some iterators will be utterly massive.
+    """
+    other = it(other)
+
+    while True:
+        try:
+            a = next(self)
+        except StopIteration:
+            a = StopIteration
+
+        try:
+            b = next(other)
+        except StopIteration:
+            b = StopIteration
+
+        if a == StopIteration and b == StopIteration:
+            return True
+
+        elif (a, b) == (StopIteration, b) or (a, b) == (a, StopIteration):
+            return False
+
+        else:
+            if a != b:
+                return False
+
+
+trait('neq')(lambda self, other: not self.eq(other))
+

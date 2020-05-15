@@ -209,3 +209,14 @@ def test_le():
     assert it('asdf').le('asdf')
     assert it('asdf').cycle().take(5).le('asdfa')
 
+
+def test_eq():
+    assert it('asdf').eq('asdf')
+    assert not it('asdf').eq('asdfasdfasdfasdf')
+    assert it('asdf').skip(1).eq('sdf')
+    assert not it('asdf').eq((2, 1, 23))
+
+def test_neq():
+    assert it('asdf').neq('asdf1')
+    assert it('asdf').skip(1).neq('asdf')
+
