@@ -210,11 +210,22 @@ def test_le():
     assert it('asdf').cycle().take(5).le('asdfa')
 
 
+def test_eq_by():
+    assert it('asdf').eq_by('asdf', lambda a, b: a.upper() == b.upper())
+    assert not it('bsdf').eq_by('asdf', lambda a, b: a.upper() == b.upper())
+    assert (it('abc')
+        .cycle()
+        .take(10)
+        .eq_by('abcabcabca', lambda a, b: a.upper() == b.upper())
+    )
+
+
 def test_eq():
     assert it('asdf').eq('asdf')
     assert not it('asdf').eq('asdfasdfasdfasdf')
     assert it('asdf').skip(1).eq('sdf')
     assert not it('asdf').eq((2, 1, 23))
+
 
 def test_neq():
     assert it('asdf').neq('asdf1')
