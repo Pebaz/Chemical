@@ -44,6 +44,8 @@ class it:
         clazz = it.traits[name]
 
         class wrap:
+            #__doc__ = clazz.__doc__
+
             def __init__(self, items, clazz, name):
                 self.items = items
                 self.clazz = clazz
@@ -76,6 +78,8 @@ def trait(bind=None):
         return wrapper
 
     it.traits[bind.__name__.lower()] = bind
+    inner.__doc__ = bind.__doc__
+    raise Exception('what in the world?')
     return inner
 
 
@@ -343,6 +347,13 @@ def position(self, closure):
 
 @trait
 def partition(self, closure):
+    """
+    This is a code example:
+
+    ```
+    asdf.asdf()
+    ```
+    """
     parts = [], []
     for i in self:
         parts[int(not closure(i))].append(i)
