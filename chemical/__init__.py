@@ -119,11 +119,12 @@ class Skip(it):
         for _ in range(times):
             next(self)
 
-
 @trait
-class Collect(it):
-    def __init__(self, items, into=list):
-        return into(items)
+def collect(self, into=list):
+    if into == str:
+        return ''.join(self)
+    else:
+        return into(self)
 
 
 @trait
@@ -137,11 +138,6 @@ def nth(self, num):
 @trait
 def count(self):
     return len(list(self))
-
-
-@trait
-def collect(self, into=list):
-    return into(self)
 
 
 @trait

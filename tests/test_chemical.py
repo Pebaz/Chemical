@@ -27,6 +27,8 @@ def test_collect():
     assert it(range(3)).collect(set) == {0, 1, 2}
     class MyList(list): ...
     assert it(range(3)).collect(MyList) == MyList((0, 1, 2))
+    assert it('abcdef').collect(str) == 'abcdef'
+    assert it('asdf').map(lambda x: x.upper()).collect(str) == 'ASDF'
 
 
 def test_skip():
