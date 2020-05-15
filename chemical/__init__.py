@@ -200,6 +200,7 @@ trait('chain')(lambda self, collection: it(chain(self, collection)))
 trait('cycle')(lambda self: it(cycle(self)))
 trait('map')(lambda self, closure: it(map(closure, self)))
 trait('sum')(lambda self: sum(self))
+trait('enumerate')(lambda self: it(enumerate(self)))
 
 
 @trait
