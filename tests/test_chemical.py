@@ -105,3 +105,23 @@ def test_step():
     assert it('abcdef').step_by(3).collect() == ['a', 'd']
     assert it('abcdef').cycle().step_by(3).nth(17) == 'a'
 
+
+def test_map():
+    assert it('abc').map(lambda x: x.upper()).collect() == ['A', 'B', 'C']
+    assert it((1, 2, 3)).map(lambda x: x ** x).collect() == [1, 4, 27]
+
+
+def test_go():
+    seen = []
+    it('abc').inspect(lambda x: seen.append(x.upper())).go()
+    assert seen == ['A', 'B', 'C']
+    seen = []
+    it('abc').skip(1).take(1).inspect(lambda x: seen.append(x.upper())).go()
+    assert seen == ['B']
+
+
+def test_inspect():
+    seen = []
+    it('abc').inspect(lambda x: seen.append(x.upper())).go()
+    assert seen == ['A', 'B', 'C']
+

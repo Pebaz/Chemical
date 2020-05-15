@@ -199,4 +199,21 @@ from itertools import chain, cycle
 
 trait('chain')(lambda self, collection: it(chain(self, collection)))
 trait('cycle')(lambda self: it(cycle(self)))
+trait('map')(lambda self, closure: it(map(closure, self)))
+
+@trait
+def go(self):
+    for i in self: ...
+
+
+@trait
+class Inspect(it):
+    def __init__(self, items, func):
+        it.__init__(self, items)
+        self.func = func
+
+    def __next__(self):
+        item = next(self.items)
+        self.func(item)
+        return item
 
