@@ -330,3 +330,13 @@ def find(self, closure):
         'find: item matching provided lambda could not be found'
     )
 
+
+@trait
+def position(self, closure):
+    for i, element in self.enumerate():
+        if closure(element):
+            return i
+    raise ChemicalException(
+        'position: item matching provided lambda is not in collection'
+    )
+

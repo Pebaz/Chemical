@@ -251,3 +251,9 @@ def test_find():
     with pytest.raises(ChemicalException):
         it('asdf').find(lambda x: x == 'say what?')
 
+
+def test_position():
+    assert it('asdf').position(lambda x: x == 'd') == 2
+    with pytest.raises(ChemicalException):
+        it('asdf').position(lambda x: x == 'say what?')
+
