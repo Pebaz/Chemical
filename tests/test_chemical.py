@@ -257,3 +257,12 @@ def test_position():
     with pytest.raises(ChemicalException):
         it('asdf').position(lambda x: x == 'say what?')
 
+
+def test_partition():
+    assert it((1, 2, 3)).partition(lambda x: x % 2 == 0) == (
+        [2], [1, 3]
+    )
+    assert it('aSdF').partition(lambda x: x.upper() == x) == (
+        ['S', 'F'], ['a', 'd']
+    )
+

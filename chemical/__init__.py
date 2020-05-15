@@ -340,3 +340,11 @@ def position(self, closure):
         'position: item matching provided lambda is not in collection'
     )
 
+
+@trait
+def partition(self, closure):
+    parts = [], []
+    for i in self:
+        parts[0 if closure(i) else 1].append(i)
+    return parts
+
