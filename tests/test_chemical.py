@@ -29,6 +29,8 @@ def test_collect():
     assert it(range(3)).collect(MyList) == MyList((0, 1, 2))
     assert it('abcdef').collect(str) == 'abcdef'
     assert it('asdf').map(lambda x: x.upper()).collect(str) == 'ASDF'
+    assert it(range(3)).collect(str) == '012'
+    assert it(range(10)).step_by(2).collect(str) == '02468'
 
 
 def test_skip():

@@ -122,7 +122,7 @@ class Skip(it):
 @trait
 def collect(self, into=list):
     if into == str:
-        return ''.join(self)
+        return ''.join(str(i) for i in self)
     else:
         return into(self)
 
