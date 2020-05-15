@@ -1,4 +1,5 @@
-from chemical import it
+import pytest
+from chemical import it, ChemicalException
 
 
 class MyItem:
@@ -146,4 +147,29 @@ def test_enumerate():
     assert it((1, 2, 3)).skip(1).take(2).enumerate().collect() == [
         (0, 2), (1, 3)
     ]
+
+
+def test_zip():
+    gold = [
+        (0, 9),
+        (1, 8),
+        (2, 7),
+        (3, 6),
+        (4, 5),
+        (5, 4),
+        (6, 3),
+        (7, 2),
+        (8, 1),
+        (9, 0)
+    ]
+    assert it(range(10)).zip(range(9, -1, -1)).collect() == gold
+    assert it(range(10)).zip(range(9, -100000, -1)).collect() == gold
+
+
+def test_unzip():
+    gold = [*range(10)], [*range(9, -1, -1)]
+    assert it(range(10)).zip(range(9, -1, -1)).unzip() == gold
+    with pytest.raises(ChemicalException):
+        it(([3, 2, 1, 0], ['a', 'b'])).unzip()
+        assert False, "Should never get here"
 

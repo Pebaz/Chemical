@@ -215,3 +215,18 @@ class Inspect(it):
         self.func(item)
         return item
 
+
+trait('zip')(lambda self, other: it(zip(self, other)))
+
+@trait
+def unzip(self):
+    left, right = [], []
+    try:
+        for l, r in self:
+            left.append(l); right.append(r)
+    except ValueError as e:
+        raise ChemicalException(
+            'unzip: left and right hand sides are unbalanced'
+        ).with_traceback(e.__traceback__) from e
+    return left, right
+
