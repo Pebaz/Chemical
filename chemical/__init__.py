@@ -345,6 +345,6 @@ def position(self, closure):
 def partition(self, closure):
     parts = [], []
     for i in self:
-        parts[0 if closure(i) else 1].append(i)
+        parts[int(not closure(i))].append(i)
     return parts
 
