@@ -132,9 +132,8 @@ def nth(self, num):
     return self.take(num).last()
 
 
-@trait
-def count(self):
-    return len(list(self))
+# `it.__len__` can never exist because list(), etc. try to use it, consuming it.
+trait('count')(lambda self: len(list(self)))
 
 
 @trait
@@ -240,4 +239,30 @@ def skip_while(self, closure):
         ahead.next()
 
     return it(ahead)
+
+
+from enum import Enum, auto
+
+class Ordering(Enum):
+    Equal = auto()
+    Less = auto()
+    Greater = auto()
+
+
+@trait
+def cmp(self, other):
+    a, b = self.count(), it(other).count()
+    if a == b: return Ordering.Equal
+    elif a < b: return Ordering.Less
+    elif a > b: return Ordering.Greater
+
+
+trait('gt')(lambda self, other: self.cmp(other) == Ordering.Greater)
+trait('ge')(
+    lambda self, other: self.cmp(other) in (Ordering.Greater, Ordering.Equal)
+)
+trait('lt')(lambda self, other: self.cmp(other) == Ordering.Less)
+trait('le')(
+    lambda self, other: self.cmp(other) in (Ordering.Less, Ordering.Equal)
+)
 

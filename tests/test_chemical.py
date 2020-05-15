@@ -1,5 +1,5 @@
 import pytest
-from chemical import it, ChemicalException
+from chemical import it, ChemicalException, Ordering
 
 
 class MyItem:
@@ -178,4 +178,34 @@ def test_skip_while():
         .take(4)
         .collect()
     ) == [80, 85, 90, 95]
+
+
+def test_cmp():
+    assert it('asdf').cmp((1, 2, 3, 4)) == Ordering.Equal
+    assert it('asdf').cmp((1, 2, 3, 4, 5)) == Ordering.Less
+    assert it('asdf').cmp((1, 2, 3)) == Ordering.Greater
+
+
+def test_gt():
+    assert it('asdf').gt('asd')
+    assert it('asdf').cycle().take(5).gt('asd')
+
+
+def test_ge():
+    assert it('asdf').ge('asd')
+    assert it('asdf').cycle().take(5).ge('asd')
+    assert it('asdf').ge('asdf')
+    assert it('asdf').cycle().take(5).ge('asdfa')
+
+
+def test_lt():
+    assert it('asdf').lt('asddfas')
+    assert it('asdf').cycle().take(5).lt('asdfas')
+
+
+def test_le():
+    assert it('as').le('asd')
+    assert it('asdf').cycle().take(5).le('asdfa')
+    assert it('asdf').le('asdf')
+    assert it('asdf').cycle().take(5).le('asdfa')
 
