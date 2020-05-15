@@ -150,26 +150,20 @@ def test_enumerate():
 
 
 def test_zip():
-    gold = [
-        (0, 9),
-        (1, 8),
-        (2, 7),
-        (3, 6),
-        (4, 5),
-        (5, 4),
-        (6, 3),
-        (7, 2),
-        (8, 1),
-        (9, 0)
-    ]
-    assert it(range(10)).zip(range(9, -1, -1)).collect() == gold
-    assert it(range(10)).zip(range(9, -100000, -1)).collect() == gold
+    gold = [(0, 7), (1, 6), (2, 5), (3, 4), (4, 3), (5, 2), (6, 1), (7, 0)]
+    assert it(range(8)).zip(range(7, -1, -1)).collect() == gold
+    assert it(range(8)).zip(range(7, -100000, -1)).collect() == gold
 
 
 def test_unzip():
-    gold = [*range(10)], [*range(9, -1, -1)]
-    assert it(range(10)).zip(range(9, -1, -1)).unzip() == gold
+    gold = [*range(9)], [*range(8, -1, -1)]
+    assert it(range(9)).zip(range(8, -1, -1)).unzip() == gold
     with pytest.raises(ChemicalException):
         it(([3, 2, 1, 0], ['a', 'b'])).unzip()
         assert False, "Should never get here"
+
+
+def test_take_while():
+    assert it(range(10)).take_while(lambda x: x < 4).collect() == [0, 1, 2, 3]
+    assert it([10, 2, 20]).take_while(lambda x: x < 4).collect() == [2]
 

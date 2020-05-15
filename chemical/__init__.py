@@ -152,6 +152,10 @@ def last(self):
 def take(self, num_items):
     return it(next(self) for i in range(num_items))
 
+@trait
+def take_while(self, closure):
+    return it(i for i in self if closure(i))
+
 
 @trait
 class Peekable(it):
