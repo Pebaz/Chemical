@@ -14,9 +14,11 @@ class MyItem:
 def test_it():
     assert list(it(range(3))) == [0, 1, 2]
     assert list(it('abc')) == ['a', 'b', 'c']
+    assert list(it(dict(name='Pebaz'))) == ['name']
 
 
 def test_take():
+    assert it('a').take(1).collect() == ['a']
     assert it('abcdefg').take(2).collect() == ['a', 'b']
     assert it('abcdefg').skip(2).take(2).collect() == ['c', 'd']
     assert it('abcdefg').step_by(2).take(3).collect() == ['a', 'c', 'e']
@@ -55,15 +57,27 @@ def test_peekable():
     assert i.next() == xs[2]
 
 def test_max():
+    assert it([1]).max() == 1
     assert it((1, 2, 3, 4)).max() == 4
     assert it('asdf').max() == 's'
     assert it((MyItem(1), MyItem(2), MyItem(3))).max() == MyItem(3)
 
 
 def test_min():
+    assert it([1]).min() == 1
     assert it((1, 2, 3, 4)).min() == 1
     assert it('asdf').min() == 'a'
     assert it((MyItem(1), MyItem(2), MyItem(3))).min() == MyItem(1)
+
+
+def test_max_by():
+    assert it([1]).max_by(lambda x: -x) == 1
+    assert it((1, 2, 3, 4)).max_by(lambda x: -x) == 1
+
+
+def test_min_by():
+    assert it([1]).min_by(lambda x: -x) == 1
+    assert it((1, 2, 3, 4)).min_by(lambda x: -x) == 4
 
 
 def test_chain():
@@ -230,4 +244,10 @@ def test_eq():
 def test_neq():
     assert it('asdf').neq('asdf1')
     assert it('asdf').skip(1).neq('asdf')
+
+
+def test_find():
+    assert it('asdf').find(lambda x: x.upper() == 'S') == 's'
+    with pytest.raises(ChemicalException):
+        it('asdf').find(lambda x: x == 'say what?')
 

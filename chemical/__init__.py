@@ -97,7 +97,7 @@ class Step(it):
 
 @trait
 class Filter(it):
-    def __init__(self, items, filter_func):
+    def __init__(self, items, filter_func=lambda x: bool(x)):
         it.__init__(self, items)
         self.filter_func = filter_func
 
@@ -189,6 +189,30 @@ class Peekable(it):
 
 trait('max')(lambda self: max(self))
 trait('min')(lambda self: min(self))
+
+@trait
+def max_by(self, closure):
+    max_val = self.next()
+    max_cmp = closure(max_val)
+    for i in self:
+        comp = closure(i)
+        if comp > max_cmp:
+            max_val = i
+            max_cmp = comp
+    return max_val
+
+
+@trait
+def min_by(self, closure):
+    min_val = self.next()
+    min_cmp = closure(min_val)
+    for i in self:
+        comp = closure(i)
+        if comp < min_cmp:
+            min_val = i
+            min_cmp = comp
+    return min_val
+
 
 from itertools import chain, cycle
 
@@ -294,4 +318,15 @@ def eq_by(self, other, closure):
 
 trait('eq')(lambda self, other: self.eq_by(other, lambda a, b: a == b))
 trait('neq')(lambda self, other: not self.eq(other))
+
+
+@trait
+def find(self, closure):
+    try:
+        return self.filter(closure).next()
+    except StopIteration as e:
+        ...
+    raise ChemicalException(
+        'find: item matching provided lambda could not be found'
+    )
 
