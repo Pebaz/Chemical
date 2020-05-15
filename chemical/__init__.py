@@ -129,10 +129,7 @@ def collect(self, into=list):
 
 @trait
 def nth(self, num):
-    item = None
-    for _ in range(num):
-        item = next(self)
-    return item
+    return self.take(num).last()
 
 
 @trait
