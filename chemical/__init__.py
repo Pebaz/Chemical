@@ -107,9 +107,8 @@ class Filter(it):
                 return res
 
 
-@trait('all')
-def all_items_eval_to_true(self, func):
-    return all(func(i) for i in self)
+trait('all')(lambda self, func: all(func(i) for i in self))
+trait('any')(lambda self, func: any(func(i) for i in self))
 
 
 @trait
@@ -200,6 +199,8 @@ from itertools import chain, cycle
 trait('chain')(lambda self, collection: it(chain(self, collection)))
 trait('cycle')(lambda self: it(cycle(self)))
 trait('map')(lambda self, closure: it(map(closure, self)))
+trait('sum')(lambda self: sum(self))
+
 
 @trait
 def go(self):

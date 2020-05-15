@@ -81,6 +81,11 @@ def test_all():
     assert it('bsdf').all(lambda x: x > 'a')
 
 
+def test_any():
+    assert it('asdf').any(lambda x: x > 'a')
+    assert not it('bsdf').all(lambda x: x <= 'a')
+
+
 def test_count():
     assert it('abc').count() == 3
     assert it('abc').skip(1).count() == 2
@@ -124,4 +129,10 @@ def test_inspect():
     seen = []
     it('abc').inspect(lambda x: seen.append(x.upper())).go()
     assert seen == ['A', 'B', 'C']
+
+
+def test_sum():
+    assert it((1, 2, 3)).sum() == 6
+    assert it((1, 2, 3)).skip(1).sum() == 5
+    assert it((1, 2, 3)).cycle().take(22).sum() == 43
 
