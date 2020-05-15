@@ -167,3 +167,15 @@ def test_take_while():
     assert it(range(10)).take_while(lambda x: x < 4).collect() == [0, 1, 2, 3]
     assert it([10, 2, 20]).take_while(lambda x: x < 4).collect() == [2]
 
+
+def test_skip_while():
+    assert it(range(10)).skip_while(lambda x: x < 6).collect() == [6, 7, 8, 9]
+    assert (it(range(100))
+        .skip(10)
+        .step_by(5)
+        .skip(10)
+        .skip_while(lambda x: x < 80)
+        .take(4)
+        .collect()
+    ) == [80, 85, 90, 95]
+

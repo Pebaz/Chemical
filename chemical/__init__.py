@@ -231,3 +231,13 @@ def unzip(self):
         ).with_traceback(e.__traceback__) from e
     return left, right
 
+
+@trait
+def skip_while(self, closure):
+    ahead = self.peekable()
+
+    while closure(ahead.peek()):
+        ahead.next()
+
+    return it(ahead)
+
