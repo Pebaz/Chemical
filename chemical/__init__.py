@@ -268,13 +268,7 @@ trait('le')(
 
 
 @trait
-def eq(self, other):
-    """
-    Although this would be simpler:
-    >>> return self.collect() == it(other).collect()
-
-    This is more efficient given that some iterators will be utterly massive.
-    """
+def eq_by(self, other, closure):
     other = it(other)
 
     while True:
@@ -294,10 +288,10 @@ def eq(self, other):
         elif (a, b) == (StopIteration, b) or (a, b) == (a, StopIteration):
             return False
 
-        else:
-            if a != b:
-                return False
+        elif not closure(a, b):
+            return False
 
 
+trait('eq')(lambda self, other: self.eq_by(other, lambda a, b: a == b))
 trait('neq')(lambda self, other: not self.eq(other))
 
