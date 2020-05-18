@@ -70,14 +70,14 @@ def test_min():
     assert it((MyItem(1), MyItem(2), MyItem(3))).min() == MyItem(1)
 
 
-def test_max_by():
-    assert it([1]).max_by(lambda x: -x) == 1
-    assert it((1, 2, 3, 4)).max_by(lambda x: -x) == 1
+def test_max_by_key():
+    assert it([1]).max_by_key(lambda x: -x) == 1
+    assert it((1, 2, 3, 4)).max_by_key(lambda x: -x) == 1
 
 
-def test_min_by():
-    assert it([1]).min_by(lambda x: -x) == 1
-    assert it((1, 2, 3, 4)).min_by(lambda x: -x) == 4
+def test_min_by_key():
+    assert it([1]).min_by_key(lambda x: -x) == 1
+    assert it((1, 2, 3, 4)).min_by_key(lambda x: -x) == 4
 
 
 def test_chain():

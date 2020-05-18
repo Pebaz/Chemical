@@ -16,6 +16,19 @@ class it:
     traits = {}
 
     def __init__(self, items=[]):
+        if isinstance(items, it):
+            if items.reverse:
+                self.reverse = items.reverse
+            else:
+                try:
+                    self.reverse = reversed(items)
+                except TypeError:
+                    self.reverse = None
+        else:
+            try:
+                self.reverse = reversed(items)
+            except TypeError:
+                self.reverse = None
         self.items = iter(items)
 
     def __str__(self):
@@ -25,9 +38,12 @@ class it:
         return self
 
     def __reversed__(self):
-        raise Exception('NOT IMPLEMENTED')
+        if not self.reverse:
+            raise ChemicalException('Underlying collection cannot be reversed.')
+        return it(self.reverse)
 
     def __next__(self):
+        if self.reverse: next(self.reverse)
         return next(self.items)
 
     def __dir__(self):
@@ -208,7 +224,7 @@ trait('max')(lambda self: max(self))
 trait('min')(lambda self: min(self))
 
 @trait
-def max_by(self, closure):
+def max_by_key(self, closure):
     max_val = self.next()
     max_cmp = closure(max_val)
     for i in self:
@@ -220,7 +236,7 @@ def max_by(self, closure):
 
 
 @trait
-def min_by(self, closure):
+def min_by_key(self, closure):
     min_val = self.next()
     min_cmp = closure(min_val)
     for i in self:
@@ -383,4 +399,9 @@ def flatten(self):
         except TypeError:
             links = links.chain([i])
     return links
+
+
+@trait
+def rev(self):
+    return reversed(self)
 
