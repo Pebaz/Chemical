@@ -15,14 +15,17 @@ class it:
     """
     traits = {}
 
-    def __init__(self, items=[]):
-        if isinstance(items, it):
-            self.reverse = items.reverse
+    def __init__(self, items=[], reverse_seed=None):
+        if reverse_seed:
+            self.reverse = reverse_seed
         else:
-            try:
-                self.reverse = reversed(items)
-            except TypeError:
-                self.reverse = None
+            if isinstance(items, it):
+                self.reverse = items.reverse
+            else:
+                try:
+                    self.reverse = reversed(items)
+                except TypeError:
+                    self.reverse = None
         self.items = iter(items)
 
     def __str__(self):
@@ -187,13 +190,16 @@ def last(self):
 
 @trait
 def take(self, num_items):
-    take_ = it(next(self) for i in range(num_items))
-    take_.reverse = it(next(self.reverse) for i in range(num_items))
-    return take_
+    return it(
+        (next(self) for i in range(num_items)),
+        it(next(self.reverse) for i in range(num_items))
+    )
 
 @trait
 def take_while(self, closure):
-    return it(i for i in self if closure(i))
+    take_while_ = it(i for i in self if closure(i))
+    take_while_.reverse = it(i for i in self.reverse if closure(i))
+    return take_while_
 
 
 @trait
