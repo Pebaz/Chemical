@@ -101,7 +101,18 @@ class Step(it):
 
 @trait
 class Filter(it):
-    "This is super cool!"
+    """
+    Filters out elements of the iterator based on the provided lambda.
+
+        :::python
+
+        print('hi')
+        for i in range(10):
+            "Does something"
+            print(i)
+
+    As you can see, this is a code example.
+    """
 
     def __init__(self, items, filter_func=lambda x: bool(x)):
         it.__init__(self, items)
