@@ -1052,6 +1052,7 @@ table {
     <li class="mono"><a href="#__init__.collect">collect</a></li>
     <li class="mono"><a href="#__init__.eq_by">eq_by</a></li>
     <li class="mono"><a href="#__init__.find">find</a></li>
+    <li class="mono"><a href="#__init__.flatten">flatten</a></li>
     <li class="mono"><a href="#__init__.go">go</a></li>
     <li class="mono"><a href="#__init__.last">last</a></li>
     <li class="mono"><a href="#__init__.max_by">max_by</a></li>
@@ -1153,7 +1154,7 @@ table {
            <span class="p">)</span>
        <span class="n">clazz</span> <span class="o">=</span> <span class="n">it</span><span class="o">.</span><span class="n">traits</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
        <span class="k">class</span> <span class="nc">wrap</span><span class="p">:</span>
-           <span class="c1">#__doc__ = clazz.__doc__</span>
+           <span class="vm">__doc__</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="vm">__doc__</span>
            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">clazz</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
                <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span>
                <span class="bp">self</span><span class="o">.</span><span class="n">clazz</span> <span class="o">=</span> <span class="n">clazz</span>
@@ -1169,9 +1170,9 @@ table {
 <span class="n">ef</span> <span class="n">trait</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
        <span class="k">nonlocal</span> <span class="n">bind</span>
-       <span class="n">asdf</span>
        <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">clazz</span><span class="p">):</span>
+       <span class="vm">__doc__</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="vm">__doc__</span>
        <span class="k">nonlocal</span> <span class="n">bind</span>
        <span class="n">it</span><span class="o">.</span><span class="n">traits</span><span class="p">[</span><span class="n">bind</span><span class="p">]</span> <span class="o">=</span> <span class="n">clazz</span>
        <span class="k">return</span> <span class="n">clazz</span>
@@ -1195,6 +1196,7 @@ table {
        <span class="k">return</span> <span class="n">nxt</span>
 <span class="n">trait</span>
 <span class="n">lass</span> <span class="n">Filter</span><span class="p">(</span><span class="n">it</span><span class="p">):</span>
+   <span class="s2">&quot;This is super cool!&quot;</span>
    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">filter_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>
        <span class="n">it</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">filter_func</span> <span class="o">=</span> <span class="n">filter_func</span>
@@ -1387,6 +1389,16 @@ table {
    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
        <span class="n">parts</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="ow">not</span> <span class="n">closure</span><span class="p">(</span><span class="n">i</span><span class="p">))]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
    <span class="k">return</span> <span class="n">parts</span>
+<span class="n">trait</span>
+<span class="n">ef</span> <span class="n">flatten</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="n">links</span> <span class="o">=</span> <span class="n">it</span><span class="p">()</span>
+   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+       <span class="k">try</span><span class="p">:</span>
+           <span class="nb">iter</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+           <span class="n">links</span> <span class="o">=</span> <span class="n">links</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+       <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+           <span class="n">links</span> <span class="o">=</span> <span class="n">links</span><span class="o">.</span><span class="n">chain</span><span class="p">([</span><span class="n">i</span><span class="p">])</span>
+   <span class="k">return</span> <span class="n">links</span>
 </pre></div>
 
   </div>
@@ -1405,12 +1417,12 @@ table {
 
     
   
+    <div class="desc"><p>This is super cool!</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.Filter', this);">Show source &equiv;</a></p>
   <div id="source-__init__.Filter" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1433,7 +1445,6 @@ table {
   <div id="source-__init__.Inspect" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1456,7 +1467,6 @@ table {
   <div id="source-__init__.Peekable" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1479,7 +1489,6 @@ table {
   <div id="source-__init__.Skip" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1502,7 +1511,6 @@ table {
   <div id="source-__init__.cmp" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1525,7 +1533,6 @@ table {
   <div id="source-__init__.collect" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1548,7 +1555,6 @@ table {
   <div id="source-__init__.eq_by" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1571,7 +1577,28 @@ table {
   <div id="source-__init__.find" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="__init__.flatten">
+    <p>def <span class="ident">flatten</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.flatten', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.flatten" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1594,7 +1621,6 @@ table {
   <div id="source-__init__.go" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1617,7 +1643,6 @@ table {
   <div id="source-__init__.last" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1640,7 +1665,6 @@ table {
   <div id="source-__init__.max_by" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1663,7 +1687,6 @@ table {
   <div id="source-__init__.min_by" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1686,7 +1709,6 @@ table {
   <div id="source-__init__.nth" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1711,7 +1733,6 @@ table {
   <div id="source-__init__.partition" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1734,7 +1755,6 @@ table {
   <div id="source-__init__.position" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1757,7 +1777,6 @@ table {
   <div id="source-__init__.skip_while" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1780,7 +1799,6 @@ table {
   <div id="source-__init__.take" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1803,7 +1821,6 @@ table {
   <div id="source-__init__.take_while" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -1827,10 +1844,10 @@ table {
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">trait</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">nonlocal</span> <span class="n">bind</span>
-        <span class="n">asdf</span>
         <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">clazz</span><span class="p">):</span>
+        <span class="vm">__doc__</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="vm">__doc__</span>
         <span class="k">nonlocal</span> <span class="n">bind</span>
         <span class="n">it</span><span class="o">.</span><span class="n">traits</span><span class="p">[</span><span class="n">bind</span><span class="p">]</span> <span class="o">=</span> <span class="n">clazz</span>
         <span class="k">return</span> <span class="n">clazz</span>
@@ -1862,7 +1879,6 @@ table {
   <div id="source-__init__.unzip" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="n">asdf</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
@@ -2187,7 +2203,7 @@ get this to work.</p></div>
         <span class="n">clazz</span> <span class="o">=</span> <span class="n">it</span><span class="o">.</span><span class="n">traits</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
 
         <span class="k">class</span> <span class="nc">wrap</span><span class="p">:</span>
-            <span class="c1">#__doc__ = clazz.__doc__</span>
+            <span class="vm">__doc__</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="vm">__doc__</span>
 
             <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">clazz</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span>
