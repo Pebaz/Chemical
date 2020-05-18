@@ -187,7 +187,9 @@ def last(self):
 
 @trait
 def take(self, num_items):
-    return it(next(self) for i in range(num_items))
+    take_ = it(next(self) for i in range(num_items))
+    take_.reverse = it(next(self.reverse) for i in range(num_items))
+    return take_
 
 @trait
 def take_while(self, closure):
