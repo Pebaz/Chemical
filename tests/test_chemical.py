@@ -266,3 +266,11 @@ def test_partition():
         ['S', 'F'], ['a', 'd']
     )
 
+
+def test_flatten():
+    assert it([[1, 2, 3], [4, 5, 6]]).flatten().collect() == [1, 2, 3, 4, 5, 6]
+    assert it([[1, 2, 3], [4, 5, 6], 4]).flatten().collect() == [
+        1, 2, 3, 4, 5, 6, 4
+    ]
+
+

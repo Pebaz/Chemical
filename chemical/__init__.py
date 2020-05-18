@@ -79,7 +79,7 @@ def trait(bind=None):
 
     it.traits[bind.__name__.lower()] = bind
     inner.__doc__ = bind.__doc__
-    raise Exception('what in the world?')
+    #raise Exception('what in the world?')
     return inner
 
 
@@ -358,4 +358,16 @@ def partition(self, closure):
     for i in self:
         parts[int(not closure(i))].append(i)
     return parts
+
+
+@trait
+def flatten(self):
+    links = it()
+    for i in self:
+        try:
+            iter(i)
+            links = links.chain(i)
+        except TypeError:
+            links = links.chain([i])
+    return links
 
