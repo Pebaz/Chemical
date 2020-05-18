@@ -17,13 +17,7 @@ class it:
 
     def __init__(self, items=[]):
         if isinstance(items, it):
-            if items.reverse:
-                self.reverse = items.reverse
-            else:
-                try:
-                    self.reverse = reversed(items)
-                except TypeError:
-                    self.reverse = None
+            self.reverse = items.reverse
         else:
             try:
                 self.reverse = reversed(items)
@@ -40,10 +34,14 @@ class it:
     def __reversed__(self):
         if not self.reverse:
             raise ChemicalException('Underlying collection cannot be reversed.')
-        return it(self.reverse)
+
+        reverse = it(tuple())
+        reverse.items = self.reverse
+        reverse.reverse = self.items
+
+        return reverse
 
     def __next__(self):
-        if self.reverse: next(self.reverse)
         return next(self.items)
 
     def __dir__(self):
@@ -79,6 +77,16 @@ class it:
     def next(self):
         return next(self)
 
+    def rev(self):
+        return reversed(self)
+
+
+class rv(it):
+    def __init__(self, items, reversed):
+        it.__init__(self, items)
+        # NOTE(pebaz): Overwrite reverse set from constructor
+        self.reverse = reverse
+
 
 def trait(bind=None):
     def inner(*args, **kwargs):
@@ -97,6 +105,15 @@ def trait(bind=None):
     it.traits[bind.__name__.lower()] = bind
     inner.__doc__ = bind.__doc__
     return inner
+
+
+@trait
+class Skip(it):
+    def __init__(self, items, times):
+        it.__init__(self, items)
+        self.times = times
+        for _ in range(times):
+            next(self)
 
 
 @trait('step_by')
@@ -142,15 +159,6 @@ class Filter(it):
 
 trait('all')(lambda self, func: all(func(i) for i in self))
 trait('any')(lambda self, func: any(func(i) for i in self))
-
-
-@trait
-class Skip(it):
-    def __init__(self, items, times):
-        it.__init__(self, items)
-        self.times = times
-        for _ in range(times):
-            next(self)
 
 @trait
 def collect(self, into=list):
@@ -399,9 +407,4 @@ def flatten(self):
         except TypeError:
             links = links.chain([i])
     return links
-
-
-@trait
-def rev(self):
-    return reversed(self)
 
