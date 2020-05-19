@@ -79,6 +79,8 @@ def test_peekable():
     assert i.peek() == xs[0]
     assert i.next() == xs[0]
 
+    assert it(xs).take(3).rev().skip(1).collect() == [2, 1]
+
 
 
 def test_max():
@@ -86,6 +88,9 @@ def test_max():
     assert it((1, 2, 3, 4)).max() == 4
     assert it('asdf').max() == 's'
     assert it((MyItem(1), MyItem(2), MyItem(3))).max() == MyItem(3)
+
+    assert it(range(3)).rev().max() == 2
+    assert it(range(3)).rev().take(2).rev().max() == 2
 
 
 def test_min():

@@ -211,8 +211,29 @@ def last(self):
 def take(self, num_items):
     return it(
         (next(self) for i in range(num_items)),
-        it(next(self.reverse) for i in range(num_items))
+        (next(self.reverse) for i in range(num_items))
     )
+
+
+# @trait
+# class Take(it):
+#     def __init__(self, items, num_items):
+#         it.__init__(self, items)
+#         self.num_items = num_items
+
+#     def __next__(self):
+#         if self.num_items > 0:
+#             self.num_items -= 1
+#             return next(self.items)
+#         else:
+#             raise StopIteration()
+
+#     def __reversed__(self):
+#         return it(
+#             (next(self.reverse) for i in range(self.num_items)),
+#             (next(self) for i in range(self.num_items))
+#         )
+
 
 @trait
 def take_while(self, closure):
