@@ -19,13 +19,10 @@ class it:
         if reverse_seed:
             self.reverse = reverse_seed
         else:
-            if isinstance(items, it):
-                self.reverse = items.reverse
-            else:
-                try:
-                    self.reverse = reversed(items)
-                except TypeError:
-                    self.reverse = None
+            self.reverse = (
+                items.reverse if isinstance(items, it)
+                else self._get_reverse(items)
+            )
         self.items = iter(items)
 
     def __str__(self):
@@ -37,12 +34,7 @@ class it:
     def __reversed__(self):
         if not self.reverse:
             raise ChemicalException('Underlying collection cannot be reversed.')
-
-        reverse = it(tuple())
-        reverse.items = self.reverse
-        reverse.reverse = self.items
-
-        return reverse
+        return it(self.reverse, self.items)
 
     def __next__(self):
         return next(self.items)
@@ -77,18 +69,18 @@ class it:
 
         return wrap(self, clazz, name)
 
+    def _get_reverse(self, obj):
+        "Convenience method to get reversed version of object or None."
+        try:
+            return reversed(obj)
+        except TypeError:
+            return None
+
     def next(self):
         return next(self)
 
     def rev(self):
         return reversed(self)
-
-
-class rv(it):
-    def __init__(self, items, reversed):
-        it.__init__(self, items)
-        # NOTE(pebaz): Overwrite reverse set from constructor
-        self.reverse = reverse
 
 
 def trait(bind=None):
@@ -115,8 +107,39 @@ class Skip(it):
     def __init__(self, items, times):
         it.__init__(self, items)
         self.times = times
-        for _ in range(times):
-            next(self)
+    
+    def __next__(self):
+        while self.times > 0:
+            next(self.items)
+            next(self.reverse)
+            self.times -= 1
+
+        return next(self.items)
+
+    def __reversed__(self):
+        "HAS SIDE EFFECTS. THE ENTIRE COLLECTION MUST BE COLLECTED BEFORE."
+
+        # THIS CAN BE MADE MORE EFFICIENT BY USING A SLIDING BUFFER
+        # HOWEVER, IT'S STILL COLLECTING THE ENTIRE THING :|
+        # buffer = [None] * self.times
+        # collection = [*self.reverse]
+        # return it(collection[:len(collection) - self.times], self.items)
+
+        ## I have the front and the back, but not the bounds....
+        #buffer = [next(self.items) for i in range(self.times)]
+
+        # Which of the next lines is more clear? (due to subtle next(self.items))
+        last_item = [next(self.items) for _ in range(self.times)][-1]
+        #last_item = it(self.items).nth(self.times)
+
+        return (it(self.reverse, self.items)
+            .take_while(lambda x: id(x) != id(last_item))
+        )
+
+        
+
+
+
 
 
 @trait('step_by')

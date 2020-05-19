@@ -23,6 +23,11 @@ def test_take():
     assert it('abcdefg').skip(2).take(2).collect() == ['c', 'd']
     assert it('abcdefg').step_by(2).take(3).collect() == ['a', 'c', 'e']
 
+    assert it('a').rev().take(1).collect(str) == 'a'
+    assert it('a').take(1).rev().collect(str) == 'a'
+    assert it('abc').rev().take(3).collect(str) == 'cba'
+    assert it('abc').take(3).rev().collect(str) == 'cba'
+
 
 def test_collect():
     assert it(range(3)).collect() == [0, 1, 2]
@@ -34,12 +39,20 @@ def test_collect():
     assert it('asdf').map(lambda x: x.upper()).collect(str) == 'ASDF'
     assert it(range(3)).collect(str) == '012'
     assert it(range(10)).step_by(2).collect(str) == '02468'
+    
+    assert it(range(3)).rev().collect() == [2, 1, 0]
+    assert it('asdf').rev().collect(str) == 'fdsa'
+    assert it(it('asdf').rev()).rev().collect(str) == 'asdf'
+    assert it(range(3)).rev().rev().rev().collect() == [2, 1, 0]
 
 
 def test_skip():
     assert it(range(3)).skip(1).collect() == [1, 2]
     assert it(range(100)).skip(10).take(10).collect() == [*range(10, 20)]
     assert it(range(10)).skip(1).skip(1).collect() == [*range(2, 10)]
+
+    assert it(range(3)).skip(1).rev().collect() == [2, 1]
+    assert it(range(3)).skip(1).rev().skip(1).rev().collect() == [1]
 
 
 def test_peekable():
