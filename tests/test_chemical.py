@@ -58,16 +58,28 @@ def test_skip():
 def test_peekable():
     xs = 1, 2, 3
     i = it(xs).peekable()
+    assert i.peek() == xs[0]
+    assert i.next() == xs[0]
+    assert i.next() == xs[1]
+    assert i.peek() == xs[2]
+    assert i.peek() == xs[2]
+    assert i.next() == xs[2]
 
+    i = it(xs).rev().peekable()
+    assert i.peek() == xs[2]
+    assert i.next() == xs[2]
+    assert i.next() == xs[1]
+    assert i.peek() == xs[0]
     assert i.peek() == xs[0]
     assert i.next() == xs[0]
 
+    i = it(xs).rev().skip(1).peekable()
+    assert i.peek() == xs[1]
     assert i.next() == xs[1]
+    assert i.peek() == xs[0]
+    assert i.next() == xs[0]
 
-    assert i.peek() == xs[2]
-    assert i.peek() == xs[2]
 
-    assert i.next() == xs[2]
 
 def test_max():
     assert it([1]).max() == 1

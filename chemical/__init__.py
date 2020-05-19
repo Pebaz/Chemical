@@ -104,9 +104,14 @@ def trait(bind=None):
 
 @trait
 class Skip(it):
+    """
+    Lazily skip a number of items in the iterator chain.
+    """
+
     def __init__(self, items, times):
         it.__init__(self, items)
         self.times = times
+        assert times > 0, 'skip: number of items to skip must be > 0'
     
     def __next__(self):
         while self.times > 0:
@@ -117,29 +122,20 @@ class Skip(it):
         return next(self.items)
 
     def __reversed__(self):
-        "HAS SIDE EFFECTS. THE ENTIRE COLLECTION MUST BE COLLECTED BEFORE."
+        """
+        Although subtle, it is important that `next(self.items)` is called the
+        same amount of times as `self.reverse`.
+        """
+        last_item = [next(self.items) for _ in range(self.times)]
 
-        # THIS CAN BE MADE MORE EFFICIENT BY USING A SLIDING BUFFER
-        # HOWEVER, IT'S STILL COLLECTING THE ENTIRE THING :|
-        # buffer = [None] * self.times
-        # collection = [*self.reverse]
-        # return it(collection[:len(collection) - self.times], self.items)
-
-        ## I have the front and the back, but not the bounds....
-        #buffer = [next(self.items) for i in range(self.times)]
-
-        # Which of the next lines is more clear? (due to subtle next(self.items))
-        last_item = [next(self.items) for _ in range(self.times)][-1]
-        #last_item = it(self.items).nth(self.times)
+        if last_item:
+            last_item = last_item[-1]
+        else:
+            raise StopIteration('skip: reversing collection yields no elements')
 
         return (it(self.reverse, self.items)
             .take_while(lambda x: id(x) != id(last_item))
         )
-
-        
-
-
-
 
 
 @trait('step_by')
