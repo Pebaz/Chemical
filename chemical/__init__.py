@@ -25,6 +25,13 @@ class it:
             )
         self.items = iter(items)
 
+    def __copy__(self):
+        from copy import copy
+        iterator = it()
+        iterator.items = copy(self.items)
+        iterator.reverse = copy(self.reverse)
+        return iterator
+
     def __str__(self):
         return f'<{self.__class__.__name__} object at {hex(id(self))}>'
 
@@ -209,10 +216,8 @@ def last(self):
 
 @trait
 def take(self, num_items):
-    return it(
-        (next(self) for i in range(num_items)),
-        (next(self.reverse) for i in range(num_items))
-    )
+    taken = [next(self) for i in range(num_items)]
+    return it(iter(taken), reversed(taken))
 
 
 # @trait
