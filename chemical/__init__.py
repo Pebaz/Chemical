@@ -310,7 +310,15 @@ def min_by_key(self, closure):
 
 from itertools import chain, cycle
 
-trait('chain')(lambda self, collection: it(chain(self, collection)))
+#trait('chain')(lambda self, collection: it(chain(self, collection)))
+@trait('chain')
+def chain_it(self, itr):
+
+    return it(
+        chain(self, itr),
+        chain(itr.rev() if isinstance(itr, it) else reversed(itr), self.rev())
+    )
+
 
 #trait('cycle')(lambda self: it(cycle(self)))
 @trait('cycle')

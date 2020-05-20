@@ -99,20 +99,31 @@ def test_min():
     assert it('asdf').min() == 'a'
     assert it((MyItem(1), MyItem(2), MyItem(3))).min() == MyItem(1)
 
+    assert it(range(3)).rev().min() == 0
+    assert it(range(3)).rev().take(2).rev().min() == 1
+
 
 def test_max_by_key():
     assert it([1]).max_by_key(lambda x: -x) == 1
     assert it((1, 2, 3, 4)).max_by_key(lambda x: -x) == 1
+
+    assert it(range(1, 5)).rev().max_by_key(lambda x: -x) == 1
 
 
 def test_min_by_key():
     assert it([1]).min_by_key(lambda x: -x) == 1
     assert it((1, 2, 3, 4)).min_by_key(lambda x: -x) == 4
 
+    assert it(range(1, 5)).rev().min_by_key(lambda x: -x) == 4
+
 
 def test_chain():
     assert it((1, 2, 3)).chain((4, 5, 6)).collect() == [1, 2, 3, 4, 5, 6]
     assert it('as').chain((3.1, 2.4)).collect() == ['a', 's', 3.1, 2.4]
+
+    assert it('as').chain('df').rev().collect(str) == 'fdsa'
+    assert it(range(10)).rev().chain('df').collect(str) == '9876543210df'
+    assert it(range(10)).rev().chain('df').rev().collect(str) == 'fd0123456789'
 
 
 def test_filter():
