@@ -139,16 +139,23 @@ def test_cycle():
     assert it('abc').cycle().take(6).collect() == ['a', 'b', 'c', 'a', 'b', 'c']
 
     assert it('abc').cycle().rev().take(6).collect(str) == 'cbacba'
+    assert it('abc').cycle().rev().take(6).rev().collect(str) == 'abcabc'
 
 
 def test_all():
     assert not it('asdf').all(lambda x: x > 'a')
     assert it('bsdf').all(lambda x: x > 'a')
 
+    assert not it('asdf').rev().all(lambda x: x > 'a')
+    assert it('bsdf').rev().all(lambda x: x > 'a')
+
 
 def test_any():
     assert it('asdf').any(lambda x: x > 'a')
     assert not it('bsdf').all(lambda x: x <= 'a')
+
+    assert it('asdf').rev().any(lambda x: x > 'a')
+    assert not it('bsdf').rev().all(lambda x: x <= 'a')
 
 
 def test_count():
@@ -156,11 +163,19 @@ def test_count():
     assert it('abc').skip(1).count() == 2
     assert it('abc').skip(1).take(2).count() == 2
 
+    assert it('abc').rev().count() == 3
+    assert it('abc').skip(1).rev().count() == 2
+    assert it('abc').skip(1).take(2).rev().count() == 2    
+
 
 def test_last():
     assert it('abc').last() == 'c'
     assert it('abc').skip(1).last() == 'c'
     assert it('abc').cycle().take(8).last() == 'b'
+
+    assert it('abc').rev().last() == 'a'
+    assert it('abc').skip(1).rev().last() == 'b'
+    assert it('abc').cycle().take(8).rev().last() == 'a'
 
 
 def test_nth():
