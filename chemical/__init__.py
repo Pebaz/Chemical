@@ -161,8 +161,38 @@ class Step(it):
         return nxt
 
 
+# @trait
+# class Filter(it):
+#     """
+#     Filters out elements of the iterator based on the provided lambda.
+
+#         :::python
+
+#         print('hi')
+#         for i in range(10):
+#             "Does something"
+#             print(i)
+
+#     As you can see, this is a code example.
+#     """
+
+#     def __init__(self, items, filter_func=lambda x: bool(x)):
+#         it.__init__(self, items)
+#         self.filter_func = filter_func
+
+#     def __next__(self):
+#         while res := next(self.items):
+#             if self.filter_func(res):
+#                 return res
+
+#     def __reversed__(self):
+#         return it(
+#             (i for i in self if self.filter_func(i)),
+#             (i for i in self.reverse if self.filter_func(i))
+#         )
+
 @trait
-class Filter(it):
+def filter(self, filter_func):
     """
     Filters out elements of the iterator based on the provided lambda.
 
@@ -172,18 +202,13 @@ class Filter(it):
         for i in range(10):
             "Does something"
             print(i)
-
+            
     As you can see, this is a code example.
     """
-
-    def __init__(self, items, filter_func=lambda x: bool(x)):
-        it.__init__(self, items)
-        self.filter_func = filter_func
-
-    def __next__(self):
-        while res := next(self.items):
-            if self.filter_func(res):
-                return res
+    return it(
+        (i for i in self if filter_func(i)),
+        (i for i in self.reverse if filter_func(i))
+    )
 
 
 trait('all')(lambda self, func: all(func(i) for i in self))
