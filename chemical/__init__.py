@@ -202,7 +202,7 @@ def filter(self, filter_func):
         for i in range(10):
             "Does something"
             print(i)
-            
+
     As you can see, this is a code example.
     """
     return it(
@@ -348,9 +348,8 @@ def chain_it(self, itr):
 #trait('cycle')(lambda self: it(cycle(self)))
 @trait('cycle')
 def cycle_it(self):
-    cycle_ = it(cycle(self))
-    cycle_.reverse = it(cycle(self.reverse))
-    return cycle_
+    return it(cycle(self), it(cycle(self.reverse)))
+
 
 trait('map')(lambda self, closure: it(map(closure, self)))
 trait('sum')(lambda self: sum(self))

@@ -138,6 +138,8 @@ def test_cycle():
     assert it(range(3)).cycle().take(6).collect() == [0, 1, 2, 0, 1, 2]
     assert it('abc').cycle().take(6).collect() == ['a', 'b', 'c', 'a', 'b', 'c']
 
+    assert it('abc').cycle().rev().take(6).collect(str) == 'cbacba'
+
 
 def test_all():
     assert not it('asdf').all(lambda x: x > 'a')
