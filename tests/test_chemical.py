@@ -34,7 +34,7 @@ def test_take():
     assert it('abc').take(3).rev().collect(str) == 'cba'
 
     with pytest.raises(ChemicalException):
-        a = it('asdf')
+        a = it('asdf').take(3)
         a.next()
         a.rev()
 
@@ -102,6 +102,11 @@ def test_peekable():
 
     assert it(xs).take(3).rev().skip(1).collect() == [2, 1]
 
+    with pytest.raises(ChemicalException):
+        a = it('asdf').peekable()
+        a.peek()
+        a.next()
+        a.rev()
 
 
 def test_max():
@@ -146,6 +151,11 @@ def test_chain():
     assert it(range(10)).rev().chain('df').collect(str) == '9876543210df'
     assert it(range(10)).rev().chain('df').rev().collect(str) == 'fd0123456789'
 
+    with pytest.raises(ChemicalException):
+        a = it('asdf').chain('fdsa')
+        a.next()
+        a.rev()
+
 
 def test_filter():
     func = lambda x: x > 2; data = 1, 2, 3, 4, 5
@@ -154,6 +164,11 @@ def test_filter():
     assert it(data).filter(func).rev().collect() == [5, 4, 3]
     assert it(data).filter(func).take(3).rev().collect() == [5, 4, 3]
 
+    with pytest.raises(ChemicalException):
+        a = it('asdf').filter(lambda x: x.upper() in 'DF')
+        a.next()
+        a.rev()
+
 
 def test_cycle():
     assert it(range(3)).cycle().take(6).collect() == [0, 1, 2, 0, 1, 2]
@@ -161,6 +176,11 @@ def test_cycle():
 
     assert it('abc').cycle().rev().take(6).collect(str) == 'cbacba'
     assert it('abc').cycle().rev().take(6).rev().collect(str) == 'abcabc'
+
+    with pytest.raises(ChemicalException):
+        a = it('asdf').cycle()
+        a.next()
+        a.rev()
 
 
 def test_all():
@@ -223,6 +243,11 @@ def test_step():
         'fcfcfcfcfcfcfcfcf'
     )
 
+    with pytest.raises(ChemicalException):
+        a = it('asdf').step_by(2)
+        a.next()
+        a.rev()
+
 
 def test_map():
     assert it('abc').map(lambda x: x.upper()).collect() == ['A', 'B', 'C']
@@ -254,6 +279,11 @@ def test_map():
     ) == [
         27, 4
     ]
+
+    with pytest.raises(ChemicalException):
+        a = it('asdf').map(lambda x: x.upper())
+        a.next()
+        a.rev()
 
 
 def test_go():
@@ -289,6 +319,11 @@ def test_inspect():
     it('abc').inspect(lambda x: seen.append(x.upper())).rev().go()
     assert seen == ['C', 'B', 'A']
 
+    with pytest.raises(ChemicalException):
+        a = it('asdf').inspect(print)
+        a.next()
+        a.rev()
+
 
 def test_sum():
     assert it((1, 2, 3)).sum() == 6
@@ -311,6 +346,11 @@ def test_enumerate():
         (0, 3), (1, 2)
     ]
 
+    with pytest.raises(ChemicalException):
+        a = it('asdf').enumerate()
+        a.next()
+        a.rev()
+
 
 def test_zip():
     gold = [(0, 7), (1, 6), (2, 5), (3, 4), (4, 3), (5, 2), (6, 1), (7, 0)]
@@ -323,6 +363,11 @@ def test_zip():
     assert it('abc').zip('123456').rev().collect() == [
         ('c', '6'), ('b', '5'), ('a', '4')
     ]
+
+    with pytest.raises(ChemicalException):
+        a = it('asdf').zip('fdsa')
+        a.next()
+        a.rev()
 
 
 def test_unzip():
@@ -349,6 +394,11 @@ def test_take_while():
         2, 3
     ]
 
+    with pytest.raises(ChemicalException):
+        a = it('asdf').take_while(lambda x: x.upper() in 'AS')
+        a.next()
+        a.rev()
+
 
 def test_skip_while():
     assert it(range(10)).skip_while(lambda x: x < 6).collect() == [6, 7, 8, 9]
@@ -364,6 +414,11 @@ def test_skip_while():
     assert it(range(10)).skip_while(lambda x: x < 6).rev().collect() == [
         9, 8, 7, 6, 5, 4, 3, 2, 1, 0
     ]
+
+    with pytest.raises(ChemicalException):
+        a = it('asdf').skip_while(lambda x: x not in 'as')
+        a.next()
+        a.rev()
 
 
 def test_cmp():
@@ -505,9 +560,19 @@ def test_flatten():
     assert it('abc').zip('123').flatten().rev().collect(str) == '3c2b1a'
 
 
-def test_no_modification_allowed():
+def test_intermittent_usage():
     a = it('asdf')
-    with pytest.raises(ChemicalException):
-        a.next()
-        a.rev()
-    
+    assert a.next() == 'a'
+    assert a.next() == 's'
+    a = a.take(2)
+    assert a.next() == 'd'
+    assert a.next() == 'f'
+
+    a = it('asdf')
+    assert a.next() == 'a'
+    assert a.next() == 's'
+    a = a.take(2).peekable()
+    assert a.peek() == 'd'
+    assert a.next() == 'd'
+    assert a.peek() == 'f'
+    assert a.next() == 'f'

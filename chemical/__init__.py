@@ -50,8 +50,8 @@ class it:
     def __reversed__(self):
         if self._modified:
             raise ChemicalException(
-                'Cannot reverse an iterator that has already yielded items with'
-                ' next() at least one time'
+                'Cannot reverse an iterator that has already yielded at least '
+                'one item with next()'
             )
 
         if not self.reverse:

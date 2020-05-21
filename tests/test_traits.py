@@ -7,7 +7,7 @@ class Goodbye(it):
         it.__init__(self, items)
         self.adder = adder
 
-    def __next__(self):
+    def __get_next__(self):
         return next(self.items) + self.adder
 
 
@@ -29,4 +29,3 @@ trait('hello')(lambda self: list(self))
 
 def test_hello():
     assert it('abc').hello() == ['a', 'b', 'c']
-
