@@ -459,7 +459,7 @@ def le(self, other):
 
 
 @trait
-def eq_by(self, other, closure):
+def cmp_by(self, other, closure):
     other = it(other)
 
     while True:
@@ -485,7 +485,7 @@ def eq_by(self, other, closure):
 
 @trait
 def eq(self, other):
-    return self.eq_by(other, lambda a, b: a == b)
+    return self.cmp_by(other, lambda a, b: a == b)
 
 
 @trait
@@ -544,3 +544,32 @@ def flatten(self):
 @trait
 def for_each(self, closure):
     return it((closure(i) for i in self), (closure(i) for i in self.reverse))
+
+
+@trait
+def is_sorted(self):
+    collection = self.collect()
+    return collection == sorted(collection)
+
+
+@trait
+def fold(self, seed, closure):
+    # it((1, 2, 3)).fold(1, lambda a, i: a(a._ * i))
+    class Ref:
+        def __init__(self, val):
+            self.val = val
+        def __call__(self, val):
+            self.val = val
+        def __getattr__(self, name):
+            if name != '_':
+                raise ChemicalException('asdfasdfasfdasdf')
+            return self.val
+        def set(self, val):
+            self.val = val
+        def get(self):
+            return self.val
+
+    the_seed = Ref(seed)
+    for i in self.items:
+        closure(the_seed, i)
+    return the_seed.get()

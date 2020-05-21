@@ -471,24 +471,26 @@ def test_le():
     assert it('asdf').cycle().take(5).rev().le('asdfa')
 
 
-def test_eq_by():
+def test_cmp_by():
     func = lambda a, b: a.upper() == b.upper()
-    assert it('asdf').eq_by('asdf', func)
-    assert not it('bsdf').eq_by('asdf', func)
+    assert it('asdf').cmp_by('asdf', func)
+    assert not it('bsdf').cmp_by('asdf', func)
     assert (it('abc')
         .cycle()
         .take(10)
-        .eq_by('abcabcabca', func)
+        .cmp_by('abcabcabca', func)
     )
 
-    assert it('asdf').rev().eq_by('fdsa', func)
-    assert not it('bsdf').rev().eq_by('fdsa', func)
+    assert it('asdf').rev().cmp_by('fdsa', func)
+    assert not it('bsdf').rev().cmp_by('fdsa', func)
     assert (it('abc')
         .cycle()
         .take(10)
         .rev()
-        .eq_by('acbacbacba', func)
+        .cmp_by('acbacbacba', func)
     )
+
+    assert it((8, 9)).cmp_by((4, 3), lambda x, y: x > y)
 
 
 def test_eq():
@@ -592,3 +594,10 @@ def test_for_each():
         a = it((1, 2, 3)).for_each(lambda x: stuff.append(x))
         a.next()
         a.rev()
+
+
+def test_is_sorted():
+    assert it((1, 2, 3)).is_sorted()
+    assert not it((2, 3, 1)).is_sorted()
+
+    assert not it((1, 2, 3)).rev().is_sorted()
