@@ -1,5 +1,5 @@
 import pytest
-from chemical import it, ChemicalException, Ordering
+from chemical import it, ChemicalException, Ordering, NothingToPeek
 
 
 class MyItem:
@@ -78,6 +78,12 @@ def test_peekable():
     assert i.next() == xs[1]
     assert i.peek() == xs[0]
     assert i.next() == xs[0]
+
+    with pytest.raises(NothingToPeek):
+        i.peek()
+
+    with pytest.raises(StopIteration):
+        i.next()
 
     assert it(xs).take(3).rev().skip(1).collect() == [2, 1]
 
@@ -324,6 +330,10 @@ def test_take_while():
     assert it(range(10)).take_while(lambda x: x < 4).collect() == [0, 1, 2, 3]
     assert it([10, 2, 20]).take_while(lambda x: x < 4).collect() == [2]
 
+    assert it([3, 10, 2, 20]).take_while(lambda x: x < 4).rev().collect() == [
+        2, 3
+    ]
+
 
 def test_skip_while():
     assert it(range(10)).skip_while(lambda x: x < 6).collect() == [6, 7, 8, 9]
@@ -335,6 +345,10 @@ def test_skip_while():
         .take(4)
         .collect()
     ) == [80, 85, 90, 95]
+
+    assert it(range(10)).skip_while(lambda x: x < 6).rev().collect() == [
+        9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+    ]
 
 
 def test_cmp():

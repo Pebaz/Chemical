@@ -7,6 +7,10 @@ class TraitException(ChemicalException):
     "Any error having to do with traits"
 
 
+class NothingToPeek(ChemicalException):
+    "Raised when a call to .peek() cannot yield another element"
+
+
 class it:
     """
     You can extend `it` with methods that produce iterators and methods that
@@ -17,7 +21,7 @@ class it:
 
     def __init__(self, items=[], reverse_seed=None):
         if reverse_seed:
-            self.reverse = reverse_seed
+            self.reverse = it(reverse_seed)
         else:
             self.reverse = (
                 items.reverse if isinstance(items, it)
@@ -79,7 +83,7 @@ class it:
     def _get_reverse(self, obj):
         "Convenience method to get reversed version of object or None."
         try:
-            return reversed(obj)
+            return it(reversed(obj))
         except TypeError:
             return None
 
@@ -270,9 +274,10 @@ def take(self, num_items):
 
 @trait
 def take_while(self, closure):
-    take_while_ = it(i for i in self if closure(i))
-    take_while_.reverse = it(i for i in self.reverse if closure(i))
-    return take_while_
+    return it(
+        (i for i in self if closure(i)),
+        it(i for i in self.reverse if closure(i))
+    )
 
 
 @trait
@@ -284,9 +289,14 @@ class Peekable(it):
 
     def peek(self):
         if self.done:
-            raise StopIteration()
+            raise NothingToPeek()
+            
         if not self.ahead:
-            self.ahead = next(self.items)
+            try:
+                self.ahead = next(self.items)
+            except StopIteration as e:
+                raise NothingToPeek().with_traceback(e.__traceback__) from e
+
         return self.ahead
 
     def __next__(self):
@@ -412,10 +422,21 @@ def unzip(self):
 def skip_while(self, closure):
     ahead = self.peekable()
 
-    while closure(ahead.peek()):
-        ahead.next()
+    try:
+        while closure(ahead.peek()):
+            ahead.next()
+    except NothingToPeek:
+        "Don't crash on account of this"
 
-    return it(ahead)
+    behind = self.reverse.peekable()
+
+    try:
+        while closure(behind.peek()):
+            behind.next()
+    except NothingToPeek:
+        "Don't crash on account of this"
+
+    return it(ahead, behind)
 
 
 from enum import Enum, auto
