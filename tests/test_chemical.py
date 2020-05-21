@@ -207,6 +207,33 @@ def test_map():
     assert it('abc').map(lambda x: x.upper()).collect() == ['A', 'B', 'C']
     assert it((1, 2, 3)).map(lambda x: x ** x).collect() == [1, 4, 27]
 
+    assert it((1, 2, 3)).map(lambda x: x ** x).rev().collect() == [
+        27, 4, 1
+    ]
+    assert it((1, 2, 3)).map(lambda x: x ** x).rev().rev().collect() == [
+        1, 4, 27
+    ]
+    assert (it((1, 2, 3))
+        .map(lambda x: x ** x)
+        .rev()
+        .rev()
+        .take(3)
+        .collect()
+    ) == [
+        1, 4, 27
+    ]
+    assert (it((1, 2, 3))
+        .map(lambda x: x ** x)
+        .rev()
+        .rev()
+        .take(3)
+        .skip(1)
+        .rev()
+        .collect()
+    ) == [
+        27, 4
+    ]
+
 
 def test_go():
     seen = []

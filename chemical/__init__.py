@@ -354,7 +354,15 @@ def cycle_it(self):
     return it(cycle(self), it(cycle(self.reverse)))
 
 
-trait('map')(lambda self, closure: it(map(closure, self)))
+#trait('map')(lambda self, closure: it(map(closure, self)))
+@trait('map')
+def map_it(self, closure):
+    return it(
+        map(closure, self),
+        map(closure, self.reverse)
+    )
+
+
 trait('sum')(lambda self: sum(self))
 trait('enumerate')(lambda self: it(enumerate(self)))
 
