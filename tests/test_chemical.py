@@ -183,12 +183,24 @@ def test_nth():
     assert it('abc').skip(1).nth(2) == 'c'
     assert it('abc').cycle().nth(23) == 'b'
 
+    assert it('abc').rev().nth(3) == 'a'
+    assert it('abc').skip(1).rev().nth(2) == 'b'
+    assert it('abc').cycle().rev().nth(23) == 'b'
+
 
 def test_step():
     assert it('abcdef').step_by(1).collect() == ['a', 'b', 'c', 'd', 'e', 'f']
     assert it('abcdef').step_by(2).collect() == ['a', 'c', 'e']
     assert it('abcdef').step_by(3).collect() == ['a', 'd']
     assert it('abcdef').cycle().step_by(3).nth(17) == 'a'
+
+    assert it('abcdef').step_by(1).rev().collect(str) == 'fedcba'
+    assert it('abcdef').step_by(2).rev().collect(str) == 'fdb'
+    assert it('abcdef').step_by(3).rev().collect(str) == 'fc'
+    assert it('abcdef').cycle().step_by(3).rev().nth(17) == 'f'
+    assert it('abcdef').cycle().step_by(3).rev().take(17).collect(str) == (
+        'fcfcfcfcfcfcfcfcf'
+    )
 
 
 def test_map():

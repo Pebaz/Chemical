@@ -160,6 +160,9 @@ class Step(it):
             pass
         return nxt
 
+    def __reversed__(self):
+        return it(Step(self.reverse, self.step), self.items)
+
 
 # @trait
 # class Filter(it):
