@@ -576,3 +576,19 @@ def test_intermittent_usage():
     assert a.next() == 'd'
     assert a.peek() == 'f'
     assert a.next() == 'f'
+
+
+def test_for_each():
+    stuff = []
+    it((1, 2, 3)).for_each(lambda x: stuff.append(x)).go()
+    assert stuff == [1, 2, 3]
+
+    stuff = []
+    it((1, 2, 3)).for_each(lambda x: stuff.append(x)).rev().go()
+    assert stuff == [3, 2, 1]
+
+    with pytest.raises(ChemicalException):
+        stuff = []
+        a = it((1, 2, 3)).for_each(lambda x: stuff.append(x))
+        a.next()
+        a.rev()

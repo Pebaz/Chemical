@@ -539,3 +539,8 @@ def flatten(self):
         except TypeError:
             links = links.chain([i])
     return links
+
+
+@trait
+def for_each(self, closure):
+    return it((closure(i) for i in self), (closure(i) for i in self.reverse))
