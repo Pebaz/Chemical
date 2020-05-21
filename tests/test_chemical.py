@@ -264,17 +264,30 @@ def test_inspect():
     it('abc').inspect(lambda x: seen.append(x.upper())).go()
     assert seen == ['A', 'B', 'C']
 
+    seen = []
+    it('abc').inspect(lambda x: seen.append(x.upper())).rev().go()
+    assert seen == ['C', 'B', 'A']
+
 
 def test_sum():
     assert it((1, 2, 3)).sum() == 6
     assert it((1, 2, 3)).skip(1).sum() == 5
     assert it((1, 2, 3)).cycle().take(22).sum() == 43
 
+    assert it((1, 2, 3)).rev().sum() == 6
+    assert it((1, 2, 3)).skip(1).rev().sum() == 5
+    assert it((1, 2, 3)).cycle().take(22).rev().sum() == 43
+
 
 def test_enumerate():
     assert it((1, 2, 3)).enumerate().collect() == [(0, 1), (1, 2), (2, 3)]
     assert it((1, 2, 3)).skip(1).take(2).enumerate().collect() == [
         (0, 2), (1, 3)
+    ]
+
+    assert it((1, 2, 3)).enumerate().rev().collect() == [(0, 3), (1, 2), (2, 1)]
+    assert it((1, 2, 3)).skip(1).take(2).enumerate().rev().collect() == [
+        (0, 3), (1, 2)
     ]
 
 

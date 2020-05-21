@@ -363,7 +363,10 @@ def map_it(self, closure):
 
 
 trait('sum')(lambda self: sum(self))
-trait('enumerate')(lambda self: it(enumerate(self)))
+#trait('enumerate')(lambda self: it(enumerate(self)))
+@trait('enumerate')
+def enumerate_it(self):
+    return it(enumerate(self), enumerate(self.reverse))
 
 
 @trait
