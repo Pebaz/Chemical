@@ -158,6 +158,9 @@ class Skip(it):
         it.__init__(self, items)
         self.times = times
         assert times > 0, 'skip: number of items to skip must be > 0'
+        self._lower_bound = max(0, self._lower_bound - times)
+        if self._upper_bound:
+            self._upper_bound -= times
     
     def __get_next__(self):
         while self.times > 0:
@@ -179,9 +182,14 @@ class Skip(it):
         else:
             raise StopIteration('skip: reversing collection yields no elements')
 
-        return (it(self.reverse, self.items)
-            .take_while(lambda x: id(x) != id(last_item))
-        )
+        revv = it(
+            self.reverse,
+            self.items,
+            self.size_hint()
+        ).take_while(lambda x: id(x) != id(last_item))
+
+        # NOTE(pebaz): Manually hide the size-hint that take_while provides
+        return it(revv, bounds=self.size_hint())
 
 
 @trait('step_by')
@@ -273,7 +281,8 @@ def take(self, num_items):
 def take_while(self, closure):
     return it(
         (i for i in self if closure(i)),
-        it(i for i in self.reverse if closure(i))
+        it(i for i in self.reverse if closure(i)),
+        (0, self.size_hint()[1])
     )
 
 

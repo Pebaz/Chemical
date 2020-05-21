@@ -42,6 +42,9 @@ def test_take():
         a.next()
         a.rev()
 
+    assert it('asdf').take(3).size_hint() == (3, 3)
+    assert it('asdf').take(3).rev().size_hint() == (3, 3)
+
 
 def test_collect():
     assert it(range(3)).collect() == [0, 1, 2]
@@ -72,6 +75,9 @@ def test_skip():
         a = it('asdf').skip(1)
         a.next()
         a.rev()
+
+    assert it('asdf').skip(1).size_hint() == (3, 3)
+    assert it('asdf').skip(1).rev().size_hint() == (3, 3)
 
 
 def test_peekable():
