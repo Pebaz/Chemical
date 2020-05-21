@@ -402,12 +402,22 @@ def test_le():
 
 
 def test_eq_by():
-    assert it('asdf').eq_by('asdf', lambda a, b: a.upper() == b.upper())
-    assert not it('bsdf').eq_by('asdf', lambda a, b: a.upper() == b.upper())
+    func = lambda a, b: a.upper() == b.upper()
+    assert it('asdf').eq_by('asdf', func)
+    assert not it('bsdf').eq_by('asdf', func)
     assert (it('abc')
         .cycle()
         .take(10)
-        .eq_by('abcabcabca', lambda a, b: a.upper() == b.upper())
+        .eq_by('abcabcabca', func)
+    )
+
+    assert it('asdf').rev().eq_by('fdsa', func)
+    assert not it('bsdf').rev().eq_by('fdsa', func)
+    assert (it('abc')
+        .cycle()
+        .take(10)
+        .rev()
+        .eq_by('acbacbacba', func)
     )
 
 
@@ -417,10 +427,19 @@ def test_eq():
     assert it('asdf').skip(1).eq('sdf')
     assert not it('asdf').eq((2, 1, 23))
 
+    assert it('asdf').rev().eq('fdsa')
+    assert not it('asdf').rev().eq('fdsafdsafdsa')
+    assert it('asdf').skip(1).rev().eq('fds')
+    assert not it('asdf').rev().eq((2, 1, 23))
+
 
 def test_neq():
     assert it('asdf').neq('asdf1')
     assert it('asdf').skip(1).neq('asdf')
+
+    assert it('asdf').rev().neq('asdf1')
+    assert it('asdf').skip(1).rev().neq('asdf')
+    assert not it('asdf').rev().neq('fdsa')
 
 
 def test_find():
@@ -428,11 +447,19 @@ def test_find():
     with pytest.raises(ChemicalException):
         it('asdf').find(lambda x: x == 'say what?')
 
+    assert it('asdf').rev().find(lambda x: x.upper() == 'S') == 's'
+    with pytest.raises(ChemicalException):
+        it('asdf').rev().find(lambda x: x == 'say what?')
+
 
 def test_position():
     assert it('asdf').position(lambda x: x == 'd') == 2
     with pytest.raises(ChemicalException):
         it('asdf').position(lambda x: x == 'say what?')
+
+    assert it('asdf').rev().position(lambda x: x == 'd') == 1
+    with pytest.raises(ChemicalException):
+        it('asdf').rev().position(lambda x: x == 'say what?')
 
 
 def test_partition():
