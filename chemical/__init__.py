@@ -341,7 +341,6 @@ from itertools import chain, cycle
 #trait('chain')(lambda self, collection: it(chain(self, collection)))
 @trait('chain')
 def chain_it(self, itr):
-
     return it(
         chain(self, itr),
         chain(itr.rev() if isinstance(itr, it) else reversed(itr), self.rev())
@@ -382,6 +381,9 @@ class Inspect(it):
         item = next(self.items)
         self.func(item)
         return item
+
+    def __reversed__(self):
+        return it(Inspect(self.reverse, self.func), self.items)
 
 
 trait('zip')(lambda self, other: it(zip(self, other)))

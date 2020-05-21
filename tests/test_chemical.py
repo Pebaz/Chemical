@@ -239,8 +239,23 @@ def test_go():
     seen = []
     it('abc').inspect(lambda x: seen.append(x.upper())).go()
     assert seen == ['A', 'B', 'C']
+
     seen = []
     it('abc').skip(1).take(1).inspect(lambda x: seen.append(x.upper())).go()
+    assert seen == ['B']
+
+    seen = []
+    it('abc').inspect(lambda x: seen.append(x.upper())).rev().go()
+    assert seen == ['C', 'B', 'A']
+    
+    seen = []
+    (it('abc')
+        .skip(1)
+        .take(1)
+        .inspect(lambda x: seen.append(x.upper()))
+        .rev()
+        .go()
+    )
     assert seen == ['B']
 
 
