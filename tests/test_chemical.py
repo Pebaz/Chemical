@@ -601,3 +601,44 @@ def test_is_sorted():
     assert not it((2, 3, 1)).is_sorted()
 
     assert not it((1, 2, 3)).rev().is_sorted()
+
+
+def test_product():
+    assert it((1, 2, 3)).product() == 6
+    assert it((-1, 2, 3)).product() == -6
+
+    assert it((1, 2, 3)).rev().product() == 6
+    assert it((-1, 2, 3)).rev().product() == -6
+
+
+def test_fold():
+    assert it((1, 2, 3)).fold(1, lambda a, i: a(a._ * i)) == 6
+    assert it((1, 2, 3)).rev().fold(1, lambda a, i: a(a._ * i)) == 6
+
+
+def test_scan():
+    assert (it((1, 2, 3))
+        .scan(1, lambda acc, ele: acc(acc._ * ele))
+        .collect()
+    ) == [1, 2, 6]
+
+    class Scanner:
+        def __init__(self):
+            self.chars = []
+            self.state = 'GET'
+
+    def state_machine(state, char):
+        if state._.state == 'PRINT':
+            print(char)
+            state._.state = 'GET'
+            return '-'
+        elif state._.state == 'GET':
+            state._.chars.append(char)
+            state._.state = 'PRINT'
+            return char
+        else:
+            raise Exception('Unreachable')
+
+    scanner = Scanner()
+    assert it('abcd').scan(scanner, state_machine).collect(str) == 'a-c-'
+    assert scanner.chars == ['a', 'c']

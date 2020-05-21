@@ -552,24 +552,49 @@ def is_sorted(self):
     return collection == sorted(collection)
 
 
+class Ref:
+    def __init__(self, val):
+        self.val = val
+
+    def __call__(self, val):
+        self.val = val
+        return val
+
+    def __getattr__(self, name):
+        if name != '_':
+            raise ChemicalException("To get a reference's value, use: `ref._`")
+        return self.val
+
+    def set(self, val):
+        self.val = val
+
+    def get(self):
+        return self.val
+
+
 @trait
 def fold(self, seed, closure):
     # it((1, 2, 3)).fold(1, lambda a, i: a(a._ * i))
-    class Ref:
-        def __init__(self, val):
-            self.val = val
-        def __call__(self, val):
-            self.val = val
-        def __getattr__(self, name):
-            if name != '_':
-                raise ChemicalException('asdfasdfasfdasdf')
-            return self.val
-        def set(self, val):
-            self.val = val
-        def get(self):
-            return self.val
+    
 
+    # the_seed = Ref(seed)
+    # for i in self.items:
+    #     closure(the_seed, i)
+    # return the_seed.get()
+
+    return self.scan(seed, closure).last()
+
+
+@trait
+def scan(self, seed, closure):
     the_seed = Ref(seed)
-    for i in self.items:
-        closure(the_seed, i)
-    return the_seed.get()
+
+    return it(
+        (closure(the_seed, i) for i in self),
+        (closure(the_seed, i) for i in self.reverse)
+    )
+
+
+@trait
+def product(self):
+    return self.fold(1, lambda acc, ele: acc(acc._ * ele))
