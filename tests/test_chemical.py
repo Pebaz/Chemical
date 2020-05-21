@@ -296,6 +296,13 @@ def test_zip():
     assert it(range(8)).zip(range(7, -1, -1)).collect() == gold
     assert it(range(8)).zip(range(7, -100000, -1)).collect() == gold
 
+    assert it('abc').zip('123').rev().collect() == [
+        ('c', '3'), ('b', '2'), ('a', '1')
+    ]
+    assert it('abc').zip('123456').rev().collect() == [
+        ('c', '6'), ('b', '5'), ('a', '4')
+    ]
+
 
 def test_unzip():
     gold = [*range(9)], [*range(8, -1, -1)]

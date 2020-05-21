@@ -389,7 +389,11 @@ class Inspect(it):
         return it(Inspect(self.reverse, self.func), self.items)
 
 
-trait('zip')(lambda self, other: it(zip(self, other)))
+#trait('zip')(lambda self, other: it(zip(self, other)))
+@trait('zip')
+def zip_it(self, other):
+    return it(zip(self, other), zip(self.reverse, reversed(other)))
+
 
 @trait
 def unzip(self):
