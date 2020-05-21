@@ -1,3 +1,10 @@
+from enum import Enum, auto
+
+class Ordering(Enum):
+    Equal = auto()
+    Less = auto()
+    Greater = auto()
+
 
 class ChemicalException(Exception):
     "Base class for all Chemical Exceptions"
@@ -181,36 +188,6 @@ class Step(it):
         return it(Step(self.reverse, self.step), self.items)
 
 
-# @trait
-# class Filter(it):
-#     """
-#     Filters out elements of the iterator based on the provided lambda.
-
-#         :::python
-
-#         print('hi')
-#         for i in range(10):
-#             "Does something"
-#             print(i)
-
-#     As you can see, this is a code example.
-#     """
-
-#     def __init__(self, items, filter_func=lambda x: bool(x)):
-#         it.__init__(self, items)
-#         self.filter_func = filter_func
-
-#     def __next__(self):
-#         while res := next(self.items):
-#             if self.filter_func(res):
-#                 return res
-
-#     def __reversed__(self):
-#         return it(
-#             (i for i in self if self.filter_func(i)),
-#             (i for i in self.reverse if self.filter_func(i))
-#         )
-
 @trait
 def filter(self, filter_func):
     """
@@ -231,8 +208,15 @@ def filter(self, filter_func):
     )
 
 
-trait('all')(lambda self, func: all(func(i) for i in self))
-trait('any')(lambda self, func: any(func(i) for i in self))
+@trait('all')
+def all_it(self, func):
+    return all(func(i) for i in self)
+
+
+@trait('any')
+def any_it(self, func):
+    return any(func(i) for i in self)
+
 
 @trait
 def collect(self, into=list):
@@ -247,8 +231,13 @@ def nth(self, num):
     return self.take(num).last()
 
 
-# `it.__len__` can never exist because list(), etc. try to use it, consuming it.
-trait('count')(lambda self: len(list(self)))
+@trait
+def count(self):
+    """
+    """
+    # NOTE(pebaz): `it.__len__` can never exist because list(), etc. would try
+    # to use it, which would consume it.
+    return len(list(self))
 
 
 @trait
@@ -263,26 +252,6 @@ def last(self):
 def take(self, num_items):
     taken = [next(self) for i in range(num_items)]
     return it(iter(taken), reversed(taken))
-
-
-# @trait
-# class Take(it):
-#     def __init__(self, items, num_items):
-#         it.__init__(self, items)
-#         self.num_items = num_items
-
-#     def __next__(self):
-#         if self.num_items > 0:
-#             self.num_items -= 1
-#             return next(self.items)
-#         else:
-#             raise StopIteration()
-
-#     def __reversed__(self):
-#         return it(
-#             (next(self.reverse) for i in range(self.num_items)),
-#             (next(self) for i in range(self.num_items))
-#         )
 
 
 @trait
@@ -332,8 +301,16 @@ class Peekable(it):
         return ret
 
 
-trait('max')(lambda self: max(self))
-trait('min')(lambda self: min(self))
+@trait('max')
+def max_it(self):
+    return max(self)
+
+
+@trait('min')
+def min_it(self):
+    return min(self)
+
+
 
 @trait
 def max_by_key(self, closure):
@@ -359,24 +336,21 @@ def min_by_key(self, closure):
     return min_val
 
 
-from itertools import chain, cycle
-
-#trait('chain')(lambda self, collection: it(chain(self, collection)))
 @trait('chain')
 def chain_it(self, itr):
+    from itertools import chain
     return it(
         chain(self, itr),
         chain(itr.rev() if isinstance(itr, it) else reversed(itr), self.rev())
     )
 
 
-#trait('cycle')(lambda self: it(cycle(self)))
 @trait('cycle')
 def cycle_it(self):
+    from itertools import cycle
     return it(cycle(self), it(cycle(self.reverse)))
 
 
-#trait('map')(lambda self, closure: it(map(closure, self)))
 @trait('map')
 def map_it(self, closure):
     return it(
@@ -385,8 +359,11 @@ def map_it(self, closure):
     )
 
 
-trait('sum')(lambda self: sum(self))
-#trait('enumerate')(lambda self: it(enumerate(self)))
+@trait('sum')
+def sum_it(self):
+    return sum(self)
+
+
 @trait('enumerate')
 def enumerate_it(self):
     return it(enumerate(self), enumerate(self.reverse))
@@ -412,7 +389,6 @@ class Inspect(it):
         return it(Inspect(self.reverse, self.func), self.items)
 
 
-#trait('zip')(lambda self, other: it(zip(self, other)))
 @trait('zip')
 def zip_it(self, other):
     return it(zip(self, other), zip(self.reverse, reversed(other)))
@@ -452,14 +428,6 @@ def skip_while(self, closure):
     return it(ahead, behind)
 
 
-from enum import Enum, auto
-
-class Ordering(Enum):
-    Equal = auto()
-    Less = auto()
-    Greater = auto()
-
-
 @trait
 def cmp(self, other):
     a, b = self.count(), it(other).count()
@@ -468,14 +436,26 @@ def cmp(self, other):
     elif a > b: return Ordering.Greater
 
 
-trait('gt')(lambda self, other: self.cmp(other) == Ordering.Greater)
-trait('ge')(
-    lambda self, other: self.cmp(other) in (Ordering.Greater, Ordering.Equal)
-)
-trait('lt')(lambda self, other: self.cmp(other) == Ordering.Less)
-trait('le')(
-    lambda self, other: self.cmp(other) in (Ordering.Less, Ordering.Equal)
-)
+
+@trait
+def gt(self, other):
+    return self.cmp(other) == Ordering.Greater
+
+
+@trait
+def ge(self, other):
+    return self.cmp(other) in (Ordering.Greater, Ordering.Equal)
+
+
+@trait
+def lt(self, other):
+    return self.cmp(other) == Ordering.Less
+
+
+@trait
+def le(self, other):
+    return self.cmp(other) in (Ordering.Less, Ordering.Equal)
+
 
 
 @trait
@@ -503,8 +483,14 @@ def eq_by(self, other, closure):
             return False
 
 
-trait('eq')(lambda self, other: self.eq_by(other, lambda a, b: a == b))
-trait('neq')(lambda self, other: not self.eq(other))
+@trait
+def eq(self, other):
+    return self.eq_by(other, lambda a, b: a == b)
+
+
+@trait
+def neq(self, other):
+    return not self.eq(other)
 
 
 @trait
@@ -553,4 +539,3 @@ def flatten(self):
         except TypeError:
             links = links.chain([i])
     return links
-
