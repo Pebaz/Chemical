@@ -21,6 +21,10 @@ def test_it():
         a.next()
         a.rev()
 
+    assert it('asdf').size_hint() == (4, 4)
+    assert it(it('asdf')).size_hint() == (4, 4)
+    assert it(range(10)).size_hint() == (10, 10)
+
 
 def test_take():
     assert it('a').take(1).collect() == ['a']
@@ -640,3 +644,14 @@ def test_scan():
     scanner = Scanner()
     it('abcd').scan(scanner, state_machine).go()
     assert scanner.chars == ['a', 'c']
+
+
+def test_size_hint():
+    assert it('asdf').size_hint() == (4, 4)
+    assert it(range(10)).filter(lambda x: not x % 2).size_hint() == (0, 10)
+
+    assert (it(range(10))
+        .filter(lambda x: not x % 2)
+        .chain(range(15, 20))
+        .size_hint()
+    ) == (5, 15)

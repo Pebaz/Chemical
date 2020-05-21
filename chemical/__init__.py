@@ -27,7 +27,7 @@ class it:
     """
     traits = {}
 
-    def __init__(self, items=[], reverse_seed=None):
+    def __init__(self, items=[], reverse_seed=None, bounds=[]):
         self._modified = False
 
         if reverse_seed:
@@ -41,20 +41,18 @@ class it:
                 except TypeError:
                     self.reverse = None
 
-
-
-    ;;;;;;;;;;;;;;;;;;;;;asdfl;asdf;kljasdf;lkjasdf;lkjas;dfljasdflkjasd;fklj
-
-
-        if isinstance(items, it):
-            self._lower_bound, self._upper_bound = items.size_hint()
+        if bounds:
+            self._lower_bound, self._upper_bound = bounds
         else:
-            try:
-                self._lower_bound = len(items)
-                self._upper_bound = len(items)
-            except TypeError:
-                self._lower_bound = None
-                self._upper_bound = None
+            if isinstance(items, it):
+                self._lower_bound, self._upper_bound = items.size_hint()
+            else:
+                try:
+                    self._lower_bound = len(items)
+                    self._upper_bound = len(items)
+                except TypeError:
+                    self._lower_bound = 0
+                    self._upper_bound = None
 
         self.items = iter(items)
 
@@ -82,7 +80,7 @@ class it:
             return self.__get_reversed__()
 
     def __get_reversed__(self):
-        return it(self.reverse, self.items)
+        return it(self.reverse, self.items, self.size_hint())
 
     def __next__(self):
         self._modified = True
@@ -221,7 +219,8 @@ def filter(self, filter_func):
     """
     return it(
         (i for i in self if filter_func(i)),
-        (i for i in self.reverse if filter_func(i))
+        (i for i in self.reverse if filter_func(i)),
+        (0, self._upper_bound)
     )
 
 
@@ -268,8 +267,7 @@ def last(self):
 @trait
 def take(self, num_items):
     taken = [next(self) for i in range(num_items)]
-    return it(iter(taken), reversed(taken))
-
+    return it(iter(taken), reversed(taken), [num_items] * 2)
 
 @trait
 def take_while(self, closure):
@@ -356,9 +354,11 @@ def min_by_key(self, closure):
 @trait('chain')
 def chain_it(self, itr):
     from itertools import chain
+    chained = it(itr)
     return it(
-        chain(self, itr),
-        chain(itr.rev() if isinstance(itr, it) else reversed(itr), self.rev())
+        chain(self, chained),
+        chain(chained.rev() if isinstance(chained, it) else reversed(chained), self.rev()),
+        (self._lower_bound + chained._lower_bound, self._upper_bound + chained._upper_bound)
     )
 
 
