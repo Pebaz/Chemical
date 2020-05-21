@@ -356,10 +356,17 @@ def test_cmp():
     assert it('asdf').cmp((1, 2, 3, 4, 5)) == Ordering.Less
     assert it('asdf').cmp((1, 2, 3)) == Ordering.Greater
 
+    assert it('asdf').rev().cmp((1, 2, 3, 4)) == Ordering.Equal
+    assert it('asdf').rev().cmp((1, 2, 3, 4, 5)) == Ordering.Less
+    assert it('asdf').rev().cmp((1, 2, 3)) == Ordering.Greater
+
 
 def test_gt():
     assert it('asdf').gt('asd')
     assert it('asdf').cycle().take(5).gt('asd')
+
+    assert it('asdf').rev().gt('asd')
+    assert it('asdf').cycle().take(5).rev().gt('asd')
 
 
 def test_ge():
@@ -368,10 +375,18 @@ def test_ge():
     assert it('asdf').ge('asdf')
     assert it('asdf').cycle().take(5).ge('asdfa')
 
+    assert it('asdf').rev().ge('asd')
+    assert it('asdf').cycle().take(5).rev().ge('asd')
+    assert it('asdf').rev().ge('asdf')
+    assert it('asdf').cycle().take(5).rev().ge('asdfa')
+
 
 def test_lt():
     assert it('asdf').lt('asddfas')
     assert it('asdf').cycle().take(5).lt('asdfas')
+
+    assert it('asdf').rev().lt('asddfas')
+    assert it('asdf').cycle().take(5).rev().lt('asdfas')
 
 
 def test_le():
@@ -379,6 +394,11 @@ def test_le():
     assert it('asdf').cycle().take(5).le('asdfa')
     assert it('asdf').le('asdf')
     assert it('asdf').cycle().take(5).le('asdfa')
+
+    assert it('as').rev().le('asd')
+    assert it('asdf').cycle().take(5).rev().le('asdfa')
+    assert it('asdf').rev().le('asdf')
+    assert it('asdf').cycle().take(5).rev().le('asdfa')
 
 
 def test_eq_by():
