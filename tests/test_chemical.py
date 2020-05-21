@@ -311,6 +311,14 @@ def test_unzip():
         it(([3, 2, 1, 0], ['a', 'b'])).unzip()
         assert False, "Should never get here"
 
+    assert it('abc').zip('123').rev().unzip() == (
+        ['c', 'b', 'a'], ['3', '2', '1']
+    )
+
+    assert it('abc').zip('123').rev().take(2).unzip() == (
+        ['c', 'b'], ['3', '2']
+    )
+
 
 def test_take_while():
     assert it(range(10)).take_while(lambda x: x < 4).collect() == [0, 1, 2, 3]
