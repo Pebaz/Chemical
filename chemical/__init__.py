@@ -1,3 +1,4 @@
+import sys
 from enum import Enum, auto
 
 class Ordering(Enum):
@@ -39,14 +40,27 @@ class it:
                     self.reverse = it(reversed(items))
                 except TypeError:
                     self.reverse = None
+
+
+
+    ;;;;;;;;;;;;;;;;;;;;;asdfl;asdf;kljasdf;lkjasdf;lkjas;dfljasdflkjasd;fklj
+
+
+        if isinstance(items, it):
+            self._lower_bound, self._upper_bound = items.size_hint()
+        else:
+            try:
+                self._lower_bound = len(items)
+                self._upper_bound = len(items)
+            except TypeError:
+                self._lower_bound = None
+                self._upper_bound = None
+
         self.items = iter(items)
 
     def __copy__(self):
         from copy import copy
-        iterator = it()
-        iterator.items = copy(self.items)
-        iterator.reverse = copy(self.reverse)
-        return iterator
+        return it(copy(self.items), copy(self.reverse))
 
     def __str__(self):
         return f'<{self.__class__.__name__} object at {hex(id(self))}>'
@@ -112,6 +126,9 @@ class it:
 
     def rev(self):
         return reversed(self)
+
+    def size_hint(self):
+        return self._lower_bound, self._upper_bound
 
 
 def trait(bind=None):

@@ -631,14 +631,12 @@ def test_scan():
         if state._.state == 'PRINT':
             print(char)
             state._.state = 'GET'
-            return '-'
         elif state._.state == 'GET':
             state._.chars.append(char)
             state._.state = 'PRINT'
-            return char
         else:
             raise Exception('Unreachable')
 
     scanner = Scanner()
-    assert it('abcd').scan(scanner, state_machine).collect(str) == 'a-c-'
+    it('abcd').scan(scanner, state_machine).go()
     assert scanner.chars == ['a', 'c']
