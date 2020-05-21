@@ -20,13 +20,18 @@ class it:
     traits = {}
 
     def __init__(self, items=[], reverse_seed=None):
+        self._modified = False
+
         if reverse_seed:
             self.reverse = it(reverse_seed)
         else:
-            self.reverse = (
-                items.reverse if isinstance(items, it)
-                else self._get_reverse(items)
-            )
+            if isinstance(items, it):
+                self.reverse = items.reverse
+            else:
+                try:
+                    self.reverse = it(reversed(items))
+                except TypeError:
+                    self.reverse = None
         self.items = iter(items)
 
     def __copy__(self):
@@ -43,11 +48,26 @@ class it:
         return self
 
     def __reversed__(self):
+        if self._modified:
+            raise ChemicalException(
+                'Cannot reverse an iterator that has already yielded items with'
+                ' next() at least one time'
+            )
+
         if not self.reverse:
             raise ChemicalException('Underlying collection cannot be reversed.')
+
+        else:
+            return self.__get_reversed__()
+
+    def __get_reversed__(self):
         return it(self.reverse, self.items)
 
     def __next__(self):
+        self._modified = True
+        return self.__get_next__()
+
+    def __get_next__(self):
         return next(self.items)
 
     def __dir__(self):
@@ -79,13 +99,6 @@ class it:
                 return self.clazz(self.items, *args, **kwargs)
 
         return wrap(self, clazz, name)
-
-    def _get_reverse(self, obj):
-        "Convenience method to get reversed version of object or None."
-        try:
-            return it(reversed(obj))
-        except TypeError:
-            return None
 
     def next(self):
         return next(self)
@@ -124,7 +137,7 @@ class Skip(it):
         self.times = times
         assert times > 0, 'skip: number of items to skip must be > 0'
     
-    def __next__(self):
+    def __get_next__(self):
         while self.times > 0:
             next(self.items)
             next(self.reverse)
@@ -132,7 +145,7 @@ class Skip(it):
 
         return next(self.items)
 
-    def __reversed__(self):
+    def __get_reversed__(self):
         """
         Although subtle, it is important that `next(self.items)` is called the
         same amount of times as `self.reverse`.
@@ -155,7 +168,7 @@ class Step(it):
         it.__init__(self, items)
         self.step = step
 
-    def __next__(self):
+    def __get_next__(self):
         nxt = next(self.items)
         try:
             for _ in range(self.step - 1):
@@ -164,7 +177,7 @@ class Step(it):
             pass
         return nxt
 
-    def __reversed__(self):
+    def __get_reversed__(self):
         return it(Step(self.reverse, self.step), self.items)
 
 
@@ -290,7 +303,7 @@ class Peekable(it):
     def peek(self):
         if self.done:
             raise NothingToPeek()
-            
+
         if not self.ahead:
             try:
                 self.ahead = next(self.items)
@@ -299,7 +312,7 @@ class Peekable(it):
 
         return self.ahead
 
-    def __next__(self):
+    def __get_next__(self):
         if self.done:
             raise StopIteration()
 
@@ -390,12 +403,12 @@ class Inspect(it):
         it.__init__(self, items)
         self.func = func
 
-    def __next__(self):
+    def __get_next__(self):
         item = next(self.items)
         self.func(item)
         return item
 
-    def __reversed__(self):
+    def __get_reversed__(self):
         return it(Inspect(self.reverse, self.func), self.items)
 
 

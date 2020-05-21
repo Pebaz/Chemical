@@ -16,6 +16,11 @@ def test_it():
     assert list(it('abc')) == ['a', 'b', 'c']
     assert list(it(dict(name='Pebaz'))) == ['name']
 
+    with pytest.raises(ChemicalException):
+        a = it('asdf')
+        a.next()
+        a.rev()
+
 
 def test_take():
     assert it('a').take(1).collect() == ['a']
@@ -27,6 +32,11 @@ def test_take():
     assert it('a').take(1).rev().collect(str) == 'a'
     assert it('abc').rev().take(3).collect(str) == 'cba'
     assert it('abc').take(3).rev().collect(str) == 'cba'
+
+    with pytest.raises(ChemicalException):
+        a = it('asdf')
+        a.next()
+        a.rev()
 
 
 def test_collect():
@@ -53,6 +63,11 @@ def test_skip():
 
     assert it(range(3)).skip(1).rev().collect() == [2, 1]
     assert it(range(3)).skip(1).rev().skip(1).rev().collect() == [1]
+
+    with pytest.raises(ChemicalException):
+        a = it('asdf').skip(1)
+        a.next()
+        a.rev()
 
 
 def test_peekable():
@@ -470,6 +485,13 @@ def test_partition():
         ['S', 'F'], ['a', 'd']
     )
 
+    assert it((1, 2, 3)).rev().partition(lambda x: x % 2 == 0) == (
+        [2], [3, 1]
+    )
+    assert it('aSdF').rev().partition(lambda x: x.upper() == x) == (
+        ['F', 'S'], ['d', 'a']
+    )
+
 
 def test_flatten():
     assert it([[1, 2, 3], [4, 5, 6]]).flatten().collect() == [1, 2, 3, 4, 5, 6]
@@ -477,4 +499,15 @@ def test_flatten():
         1, 2, 3, 4, 5, 6, 4
     ]
 
+    assert it([[1, 2, 3], [4, 5, 6]]).flatten().rev().collect() == [
+        6, 5, 4, 3, 2, 1
+    ]
+    assert it('abc').zip('123').flatten().rev().collect(str) == '3c2b1a'
 
+
+def test_no_modification_allowed():
+    a = it('asdf')
+    with pytest.raises(ChemicalException):
+        a.next()
+        a.rev()
+    
