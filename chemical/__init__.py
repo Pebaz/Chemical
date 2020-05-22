@@ -389,7 +389,8 @@ def cycle_it(self):
 def map_it(self, closure):
     return it(
         map(closure, self),
-        map(closure, self.reverse)
+        map(closure, self.reverse),
+        self.size_hint()
     )
 
 

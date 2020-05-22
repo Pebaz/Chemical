@@ -313,6 +313,11 @@ def test_map():
         a.next()
         a.rev()
 
+    assert it('asdf').map(lambda x: x.upper()).size_hint() == (4, 4)
+    assert it('asdf').map(lambda x: x.upper()).rev().size_hint() == (4, 4)
+    assert it('ff').skip(1).map(lambda x: x).size_hint() == (1, 1)
+    assert it('ff').skip(1).map(lambda x: x).rev().size_hint() == (1, 1)
+
 
 def test_go():
     seen = []
