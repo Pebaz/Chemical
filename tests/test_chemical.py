@@ -118,6 +118,9 @@ def test_peekable():
         a.next()
         a.rev()
 
+    assert it('asdf').peekable().size_hint() == (4, 4)
+    assert it('asdf').peekable().rev().size_hint() == (4, 4)
+
 
 def test_max():
     assert it([1]).max() == 1
@@ -166,6 +169,9 @@ def test_chain():
         a.next()
         a.rev()
 
+    assert it('as').chain('df').size_hint() == (4, 4)
+    assert it('as').chain('df').rev().size_hint() == (4, 4)
+
 
 def test_filter():
     func = lambda x: x > 2; data = 1, 2, 3, 4, 5
@@ -179,6 +185,9 @@ def test_filter():
         a.next()
         a.rev()
 
+    assert it(data).filter(func).size_hint() == (0, 5)
+    assert it(data).filter(func).rev().size_hint() == (0, 5)
+
 
 def test_cycle():
     assert it(range(3)).cycle().take(6).collect() == [0, 1, 2, 0, 1, 2]
@@ -191,6 +200,9 @@ def test_cycle():
         a = it('asdf').cycle()
         a.next()
         a.rev()
+
+    assert it('asdf').cycle().size_hint() == (0, None)
+    assert it('asdf').cycle().rev().size_hint() == (0, None)
 
 
 def test_all():
@@ -257,6 +269,12 @@ def test_step():
         a = it('asdf').step_by(2)
         a.next()
         a.rev()
+
+    assert it('asdf').step_by(2).size_hint() == (2, 2)
+    assert it('asdfg').step_by(2).size_hint() == (3, 3)
+    assert it('asdf').step_by(3).size_hint() == (2, 2)
+    assert it('asdf').step_by(2).rev().size_hint() == (2, 2)
+    assert it('asdfg').step_by(3).rev().size_hint() == (2, 2)
 
 
 def test_map():

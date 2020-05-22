@@ -1,4 +1,4 @@
-import sys
+import sys, math
 from enum import Enum, auto
 
 class Ordering(Enum):
@@ -198,6 +198,10 @@ class Step(it):
         it.__init__(self, items)
         self.step = step
 
+        self._lower_bound = max(0, int(math.ceil(self._lower_bound / step)))
+        if self._upper_bound:
+            self._upper_bound = int(math.ceil(self._upper_bound / step))
+
     def __get_next__(self):
         nxt = next(self.items)
         try:
@@ -208,7 +212,7 @@ class Step(it):
         return nxt
 
     def __get_reversed__(self):
-        return it(Step(self.reverse, self.step), self.items)
+        return it(Step(self.reverse, self.step), self.items, self.size_hint())
 
 
 @trait
@@ -366,8 +370,14 @@ def chain_it(self, itr):
     chained = it(itr)
     return it(
         chain(self, chained),
-        chain(chained.rev() if isinstance(chained, it) else reversed(chained), self.rev()),
-        (self._lower_bound + chained._lower_bound, self._upper_bound + chained._upper_bound)
+        chain(
+            chained.rev() if isinstance(chained, it) else reversed(chained),
+            self.rev()
+        ),
+        (
+            self._lower_bound + chained._lower_bound,
+            self._upper_bound + chained._upper_bound
+        )
     )
 
 
