@@ -401,7 +401,7 @@ def sum_it(self):
 
 @trait('enumerate')
 def enumerate_it(self):
-    return it(enumerate(self), enumerate(self.reverse))
+    return it(enumerate(self), enumerate(self.reverse), self.size_hint())
 
 
 @trait
@@ -421,12 +421,22 @@ class Inspect(it):
         return item
 
     def __get_reversed__(self):
-        return it(Inspect(self.reverse, self.func), self.items)
+        return it(
+            Inspect(self.reverse, self.func), self.items, self.size_hint()
+        )
 
 
 @trait('zip')
 def zip_it(self, other):
-    return it(zip(self, other), zip(self.reverse, reversed(other)))
+    other_it = it(other)
+    return it(
+        zip(self, other_it),
+        zip(self.reverse, reversed(other_it)),
+        (
+            self._lower_bound + other_it._lower_bound,
+            self._upper_bound + other_it._upper_bound
+        )
+    )
 
 
 @trait
@@ -460,7 +470,7 @@ def skip_while(self, closure):
     except NothingToPeek:
         "Don't crash on account of this"
 
-    return it(ahead, behind)
+    return it(ahead, behind, (0, self._upper_bound))
 
 
 @trait
@@ -578,7 +588,11 @@ def flatten(self):
 
 @trait
 def for_each(self, closure):
-    return it((closure(i) for i in self), (closure(i) for i in self.reverse))
+    return it(
+        (closure(i) for i in self),
+        (closure(i) for i in self.reverse),
+        self.size_hint()
+    )
 
 
 @trait
@@ -626,7 +640,8 @@ def scan(self, seed, closure):
 
     return it(
         (closure(the_seed, i) for i in self),
-        (closure(the_seed, i) for i in self.reverse)
+        (closure(the_seed, i) for i in self.reverse),
+        self.size_hint()
     )
 
 

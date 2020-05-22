@@ -357,6 +357,9 @@ def test_inspect():
         a.next()
         a.rev()
 
+    assert it('abc').inspect(lambda x: ()).size_hint() == (3, 3)
+    assert it('abc').inspect(lambda x: ()).rev().size_hint() == (3, 3)
+
 
 def test_sum():
     assert it((1, 2, 3)).sum() == 6
@@ -384,6 +387,9 @@ def test_enumerate():
         a.next()
         a.rev()
 
+    assert it('asdf').enumerate().size_hint() == (4, 4)
+    assert it('asdf').enumerate().rev().size_hint() == (4, 4)
+
 
 def test_zip():
     gold = [(0, 7), (1, 6), (2, 5), (3, 4), (4, 3), (5, 2), (6, 1), (7, 0)]
@@ -401,6 +407,9 @@ def test_zip():
         a = it('asdf').zip('fdsa')
         a.next()
         a.rev()
+
+    assert it('asdf').zip('fdsa').size_hint() == (8, 8)
+    assert it('asdf').zip('fdsa').rev().size_hint() == (8, 8)
 
 
 def test_unzip():
@@ -432,6 +441,9 @@ def test_take_while():
         a.next()
         a.rev()
 
+    assert it('asdf').take_while(lambda _: ()).size_hint() == (0, 4)
+    assert it('asdf').take_while(lambda _: ()).rev().size_hint() == (0, 4)
+
 
 def test_skip_while():
     assert it(range(10)).skip_while(lambda x: x < 6).collect() == [6, 7, 8, 9]
@@ -452,6 +464,9 @@ def test_skip_while():
         a = it('asdf').skip_while(lambda x: x not in 'as')
         a.next()
         a.rev()
+
+    assert it('asdf').skip_while(lambda _: ()).size_hint() == (0, 4)
+    assert it('asdf').skip_while(lambda _: ()).rev().size_hint() == (0, 4)
 
 
 def test_cmp():
@@ -594,6 +609,9 @@ def test_flatten():
     ]
     assert it('abc').zip('123').flatten().rev().collect(str) == '3c2b1a'
 
+    assert it('abc').zip('123').flatten().size_hint() == (6, 6)
+    assert it('abc').zip('123').flatten().rev().size_hint() == (6, 6)
+
 
 def test_intermittent_usage():
     a = it('asdf')
@@ -627,6 +645,9 @@ def test_for_each():
         a = it((1, 2, 3)).for_each(lambda x: stuff.append(x))
         a.next()
         a.rev()
+
+    assert it('asdf').for_each(lambda _: ()).size_hint() == (4, 4)
+    assert it('asdf').for_each(lambda _: ()).rev().size_hint() == (4, 4)
 
 
 def test_is_sorted():
@@ -673,6 +694,9 @@ def test_scan():
     scanner = Scanner()
     it('abcd').scan(scanner, state_machine).go()
     assert scanner.chars == ['a', 'c']
+
+    assert it('abcd').scan(None, lambda _, __: ()).size_hint() == (4, 4)
+    assert it('abcd').scan(None, lambda _, __: ()).rev().size_hint() == (4, 4)
 
 
 def test_size_hint():
