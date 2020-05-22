@@ -29,23 +29,15 @@ class it:
 
     def __init__(self, items=[], reverse_seed=None, bounds=[]):
         self._modified = False
+        self.items = iter(items)
 
-        if reverse_seed:
-            self.reverse = it(reverse_seed)
-        else:
-            if isinstance(items, it):
-                self.reverse = items.reverse
-            else:
-                try:
-                    self.reverse = it(reversed(items))
-                except TypeError:
-                    self.reverse = None
+        if isinstance(items, it):
+            self._lower_bound, self._upper_bound = bounds or items.size_hint()
+            self.reverse = reverse_seed or items.reverse
 
-        if bounds:
-            self._lower_bound, self._upper_bound = bounds
         else:
-            if isinstance(items, it):
-                self._lower_bound, self._upper_bound = items.size_hint()
+            if bounds:
+                self._lower_bound, self._upper_bound = bounds
             else:
                 try:
                     self._lower_bound = len(items)
@@ -53,8 +45,10 @@ class it:
                 except TypeError:
                     self._lower_bound = 0
                     self._upper_bound = None
-
-        self.items = iter(items)
+            try:
+                self.reverse = reverse_seed or it(reversed(items))
+            except TypeError:
+                self.reverse = None
 
     def __copy__(self):
         from copy import copy
