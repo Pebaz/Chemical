@@ -256,7 +256,11 @@ def collect(self, into=list):
 
 @trait
 def nth(self, num):
-    return self.take(num).last()
+    if num <= 0:
+        raise ChemicalException('nth: to take the first item, use integer 1')
+    for i in range(num):
+        item = next(self)
+    return item
 
 
 @trait
