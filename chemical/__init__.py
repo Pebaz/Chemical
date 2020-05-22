@@ -648,3 +648,15 @@ def scan(self, seed, closure):
 @trait
 def product(self):
     return self.fold(1, lambda acc, ele: acc(acc._ * ele))
+
+
+@trait
+def par_iter(self):
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    pool = ThreadPoolExecutor() # max = ...
+
+    for value in as_completed(pool.submit(next, self) for i in range(10)):
+        yield value.result()
+
+    #it('asdf').par_iter().map(lambda x: x.upper()).collect()
