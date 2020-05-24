@@ -744,3 +744,14 @@ def test_par_iter():
         .rev()
         .collect()
     ) == [200] * len(urls)
+
+    assert it('asdf').par_iter().collect(str) == 'asdf'
+    assert it('asdf').par_iter().rev().collect(str) == 'fdsa'
+
+    with pytest.raises(ChemicalException):
+        a = it('asdf').par_iter()
+        a.next()
+        a.rev()
+
+    assert it('asdf').par_iter().size_hint() == (4, 4)
+    assert it('asdf').par_iter().rev().size_hint() == (4, 4)
