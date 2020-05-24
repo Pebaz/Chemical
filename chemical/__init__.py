@@ -652,11 +652,103 @@ def product(self):
 
 @trait
 def par_iter(self):
-    from concurrent.futures import ThreadPoolExecutor, as_completed
+    from concurrent.futures import ThreadPoolExecutor, as_completed, Future
+    import multiprocessing
+
+    num_cores = multiprocessing.cpu_count()
 
     pool = ThreadPoolExecutor() # max = ...
+    submitted = [None] * num_cores
+    completed = False
 
-    for value in as_completed(pool.submit(next, self) for i in range(10)):
-        yield value.result()
+    while not completed:
+        for i in range(num_cores):
+            submitted[i] = pool.submit(
+                lambda s, idx: (idx, next(s)), self, i
+            )
 
-    #it('asdf').par_iter().map(lambda x: x.upper()).collect()
+        for value in as_completed(submitted):
+            try:
+                index, val = value.result()
+                submitted[index] = val
+            except StopIteration:
+                completed = True
+
+        for value in submitted:
+            if not isinstance(value, Future):
+                yield value
+
+
+@trait
+class Par_Iter(it):
+    def __init__(self, items):
+        it.__init__(self, self._process_items(it(items)))
+
+    def process_items(the_items):
+        from concurrent.futures import ThreadPoolExecutor, as_completed, Future
+        import multiprocessing
+
+        num_cores = multiprocessing.cpu_count()
+
+        pool = ThreadPoolExecutor() # max = ...
+        submitted = [None] * num_cores
+        completed = False
+
+        while not completed:
+            for i in range(num_cores):
+                submitted[i] = pool.submit(
+                    lambda s, idx: (idx, next(s)), the_items, i
+                )
+
+            for value in as_completed(submitted):
+                try:
+                    index, val = value.result()
+                    submitted[index] = val
+                except StopIteration:
+                    completed = True
+
+            for value in submitted:
+                if not isinstance(value, Future):
+                    yield value
+
+
+@trait
+def par_iter(self):
+    def _process_items(the_items):
+        yield
+
+        from concurrent.futures import ThreadPoolExecutor, as_completed, Future
+        import multiprocessing
+
+        num_cores = multiprocessing.cpu_count()
+
+        pool = ThreadPoolExecutor() # max = ...
+        submitted = [None] * num_cores
+        completed = False
+
+        while not completed:
+            for i in range(num_cores):
+                submitted[i] = pool.submit(
+                    lambda s, idx: (idx, next(s)), the_items, i
+                )
+
+            for value in as_completed(submitted):
+                try:
+                    index, val = value.result()
+                    submitted[index] = val
+                except StopIteration:
+                    completed = True
+
+            for value in submitted:
+                if not isinstance(value, Future):
+                    yield value
+
+
+    # Prevent from continuing right off the bat by returning None initially.
+    # E.g. subsequent calls to next() will yield actual values.
+    forward = _process_items(self.items)
+    backward = _process_items(self.rev())
+    next(forward)
+    next(backward)
+
+    return it(forward, backward, self.size_hint())

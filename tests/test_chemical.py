@@ -708,3 +708,39 @@ def test_size_hint():
         .chain(range(15, 20))
         .size_hint()
     ) == (5, 15)
+
+
+def test_par_iter():
+    import requests
+
+    urls = [
+        'https://www.google.com',
+        'https://aws.amazon.com',
+        'https://www.microsoft.com',
+        'https://www.rust-lang.org',
+        'https://www.python.org'
+    ]
+
+    assert (it(urls)
+        .map(lambda u: requests.get(u, timeout=1))
+        .map(lambda u: u.status_code if u.ok else u.reason)
+        .par_iter()
+        .collect()
+    ) == [200] * len(urls)
+
+    assert (it(urls)
+        .map(lambda u: requests.get(u))
+        .map(lambda u: u.status_code if u.ok else u.reason)
+        .par_iter()
+        .rev()
+        .collect()
+    ) == [200] * len(urls)
+
+    assert (it(urls)
+        .map(lambda u: requests.get(u))
+        .map(lambda u: u.status_code if u.ok else u.reason)
+        .rev()
+        .par_iter()
+        .rev()
+        .collect()
+    ) == [200] * len(urls)
