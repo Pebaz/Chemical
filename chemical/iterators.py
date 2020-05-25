@@ -197,12 +197,14 @@ class Peekable(it):
 @trait('chain')
 def chain_it(self, itr):
     """
+    Chains multiple iterators together, yielding each element in turn.
 
     **Examples**
 
         :::python
 
-        
+        assert it('ab').chain('cd').collect(str) == 'abcd'
+        assert it('ab').chain('cd').rev().collect(str) == 'dcba'
     """
     from itertools import chain
     chained = it(itr)
@@ -222,12 +224,16 @@ def chain_it(self, itr):
 @trait('cycle')
 def cycle_it(self):
     """
+    Continuously returns the elements of the underlying iterator.
+
+    Without being limited in some way, this iterator will never raise the
+    `StopIteration` exception so be careful when using it in loops.
 
     **Examples**
 
         :::python
 
-        
+        assert it('123').cycle().take(6).collect(str) == '123123'
     """
     from itertools import cycle
     return it(cycle(self), it(cycle(self.reverse)))
@@ -236,12 +242,13 @@ def cycle_it(self):
 @trait('map')
 def map_it(self, closure):
     """
+    Applies a given function to each element and returns the result instead.
 
     **Examples**
 
         :::python
 
-        
+        assert it('abc').map(lambda x: x.upper()).collect(str) == 'ABC'
     """
     return it(
         map(closure, self),
@@ -253,12 +260,13 @@ def map_it(self, closure):
 @trait('enumerate')
 def enumerate_it(self):
     """
+    Yields a tuple containing the position and the value of each element.
 
     **Examples**
 
         :::python
 
-        
+        assert it((1, 2, 3)).enumerate().collect() == [(0, 1), (1, 2), (2, 3)]
     """
     return it(enumerate(self), enumerate(self.reverse), self.size_hint())
 
@@ -266,12 +274,24 @@ def enumerate_it(self):
 @trait
 class Inspect(it):
     """
+    Allows a function to be applied to each element in an iterator without
+    modifying it in any way.
+
+    This is useful for inspecting the results of an iterator.
 
     **Examples**
 
         :::python
 
-        
+        # Prints each element on it's own line
+        it('abc').inspect(print).go()
+
+        (it('abc')
+            .inspect(lambda x: print('Before:', x))
+            .map(lambda x: x.upper())
+            .inspect(lambda x: print('After:', x))
+            .go()
+        )
     """
     def __init__(self, items, func):
         it.__init__(self, items)
@@ -291,12 +311,16 @@ class Inspect(it):
 @trait('zip')
 def zip_it(self, other):
     """
+    Combines the elements from two iterators into a single iterator that returns
+    tuples containing the elements of each.
+
+    Discards elements of iterators longer than the other.
 
     **Examples**
 
         :::python
 
-        
+        assert it(range(2)).zip(range(1000)).collect() == [(0, 0), (1, 1)]
     """
     other_it = it(other)
     return it(
@@ -312,12 +336,16 @@ def zip_it(self, other):
 @trait
 def skip_while(self, closure):
     """
+    Returns any element after each one that doesn't match the given function.
 
     **Examples**
 
         :::python
 
-        
+        assert (it('abDF')
+            .skip_while(lambda x: x.upper() != x)
+            .collect(str)
+        ) == 'DF'
     """
     ahead = self.peekable()
 
@@ -341,12 +369,16 @@ def skip_while(self, closure):
 @trait
 def flatten(self):
     """
+    Removes one level of grouping from each element in an iterator.
+
+    Can be used to flatten a list of lists. However, it will not flatten a list
+    containing lists of lists.
 
     **Examples**
 
         :::python
 
-        
+        assert it([[1], [2], [3]]).flatten().collect() == [1, 2, 3]
     """
     links = it()
     for i in self:
@@ -361,12 +393,16 @@ def flatten(self):
 @trait
 def for_each(self, closure):
     """
+    Iterator version of a `for` loop.
+
+    Executes a function on each element without modifying the element.
 
     **Examples**
 
         :::python
 
-        
+        # Prints each element on its own line.
+        assert it('asdf').for_each(print)
     """
     return it(
         (closure(i) for i in self),
@@ -378,12 +414,38 @@ def for_each(self, closure):
 @trait
 def fold(self, seed, closure):
     """
+    An iterator method that applies a function, producing a single, final value.
+
+    `fold()` takes two arguments: an initial value, and a closure with two
+    arguments: an 'accumulator', and an element. The closure returns the value
+    that the accumulator should have for the next iteration.
+
+    The initial value is the value the accumulator will have on the first call.
+
+    After applying this closure to every element of the iterator, `fold()`
+    returns the accumulator.
+
+    This operation is sometimes called 'reduce' or 'inject'.
+
+    Folding is useful whenever you have a collection of something, and want to
+    produce a single value from it.
+
+    In order to achieve this in Python, a special type had to be created in
+    order to retain a reference to a value over the lifetime of the loop.
+
+    The `Ref` type is used to allow you to assign within a lambda function.
+
+    To get the value contained with a reference (dereference), simply access the
+    `_` attribute. To assign to the same value within an expression, you can
+    simply call the reference. A common pattern with the `Ref` type is to
+    assign and dereference in the same expression like this:
+    `my_ref(my_ref._ + 1)`
 
     **Examples**
 
         :::python
 
-        
+        assert it((1, 2, 3)).fold(1, lambda a, i: a(a._ * i)) == 6
     """
     return self.scan(seed, closure).last()
 
@@ -391,12 +453,25 @@ def fold(self, seed, closure):
 @trait
 def scan(self, seed, closure):
     """
+    An iterator adaptor similar to fold that holds internal state and produces a
+    new iterator.
+
+    `scan()` takes two arguments: an initial value which seeds the internal
+    state, and a closure with two arguments, the first being a mutable reference
+    to the internal state and the second an iterator element. The closure can
+    assign to the internal state to share state between iterations.
+
+    On iteration, the closure will be applied to each element of the iterator
+    and the return value from the closure.
 
     **Examples**
 
         :::python
 
-
+        assert (it((1, 2, 3))
+            .scan(1, lambda acc, ele: acc(acc._ * ele))
+            .collect()
+        ) == [1, 2, 6]
     """
     the_seed = Ref(seed)
 
@@ -463,7 +538,7 @@ def par_iter(self):
 
         num_cores = multiprocessing.cpu_count()
 
-        pool = ThreadPoolExecutor() # max = ...
+        pool = ThreadPoolExecutor(max_workers=num_cores)
         submitted = [None] * num_cores
         completed = False
 

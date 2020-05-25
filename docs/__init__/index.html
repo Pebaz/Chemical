@@ -1328,8 +1328,20 @@ table {
 
     
   
-    <div class="desc"><p><strong>Examples</strong></p>
-<p>:::python</p></div>
+    <div class="desc"><p>Allows a function to be applied to each element in an iterator without
+modifying it in any way.</p>
+<p>This is useful for inspecting the results of an iterator.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="c1"># Prints each element on it&#39;s own line</span>
+<span class="n">it</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">inspect</span><span class="p">(</span><span class="nb">print</span><span class="p">)</span><span class="o">.</span><span class="n">go</span><span class="p">()</span>
+
+<span class="p">(</span><span class="n">it</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">inspect</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Before:&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+    <span class="o">.</span><span class="n">inspect</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;After:&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">go</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.Inspect', this);">Show source &equiv;</a></p>
   <div id="source-__init__.Inspect" class="source">
@@ -1571,8 +1583,12 @@ without consuming it.</p>
 
     
   
-    <div class="desc"><p><strong>Examples</strong></p>
-<p>:::python</p></div>
+    <div class="desc"><p>Removes one level of grouping from each element in an iterator.</p>
+<p>Can be used to flatten a list of lists. However, it will not flatten a list
+containing lists of lists.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">([[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">]])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.flatten', this);">Show source &equiv;</a></p>
   <div id="source-__init__.flatten" class="source">
@@ -1595,8 +1611,27 @@ without consuming it.</p>
 
     
   
-    <div class="desc"><p><strong>Examples</strong></p>
-<p>:::python</p></div>
+    <div class="desc"><p>An iterator method that applies a function, producing a single, final value.</p>
+<p><code>fold()</code> takes two arguments: an initial value, and a closure with two
+arguments: an 'accumulator', and an element. The closure returns the value
+that the accumulator should have for the next iteration.</p>
+<p>The initial value is the value the accumulator will have on the first call.</p>
+<p>After applying this closure to every element of the iterator, <code>fold()</code>
+returns the accumulator.</p>
+<p>This operation is sometimes called 'reduce' or 'inject'.</p>
+<p>Folding is useful whenever you have a collection of something, and want to
+produce a single value from it.</p>
+<p>In order to achieve this in Python, a special type had to be created in
+order to retain a reference to a value over the lifetime of the loop.</p>
+<p>The <code>Ref</code> type is used to allow you to assign within a lambda function.</p>
+<p>To get the value contained with a reference (dereference), simply access the
+<code>_</code> attribute. To assign to the same value within an expression, you can
+simply call the reference. A common pattern with the <code>Ref</code> type is to
+assign and dereference in the same expression like this:
+<code>my_ref(my_ref._ + 1)</code></p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">fold</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="n">a</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">_</span> <span class="o">*</span> <span class="n">i</span><span class="p">))</span> <span class="o">==</span> <span class="mi">6</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.fold', this);">Show source &equiv;</a></p>
   <div id="source-__init__.fold" class="source">
@@ -1619,8 +1654,12 @@ without consuming it.</p>
 
     
   
-    <div class="desc"><p><strong>Examples</strong></p>
-<p>:::python</p></div>
+    <div class="desc"><p>Iterator version of a <code>for</code> loop.</p>
+<p>Executes a function on each element without modifying the element.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="c1"># Prints each element on its own line.</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">for_each</span><span class="p">(</span><span class="nb">print</span><span class="p">)</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.for_each', this);">Show source &equiv;</a></p>
   <div id="source-__init__.for_each" class="source">
@@ -2009,8 +2048,20 @@ processed concurrently.</p>
 
     
   
-    <div class="desc"><p><strong>Examples</strong></p>
-<p>:::python</p></div>
+    <div class="desc"><p>An iterator adaptor similar to fold that holds internal state and produces a
+new iterator.</p>
+<p><code>scan()</code> takes two arguments: an initial value which seeds the internal
+state, and a closure with two arguments, the first being a mutable reference
+to the internal state and the second an iterator element. The closure can
+assign to the internal state to share state between iterations.</p>
+<p>On iteration, the closure will be applied to each element of the iterator
+and the return value from the closure.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="p">(</span><span class="n">it</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">acc</span><span class="p">,</span> <span class="n">ele</span><span class="p">:</span> <span class="n">acc</span><span class="p">(</span><span class="n">acc</span><span class="o">.</span><span class="n">_</span> <span class="o">*</span> <span class="n">ele</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+<span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.scan', this);">Show source &equiv;</a></p>
   <div id="source-__init__.scan" class="source">
@@ -2033,8 +2084,13 @@ processed concurrently.</p>
 
     
   
-    <div class="desc"><p><strong>Examples</strong></p>
-<p>:::python</p></div>
+    <div class="desc"><p>Returns any element after each one that doesn't match the given function.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="p">(</span><span class="n">it</span><span class="p">(</span><span class="s1">&#39;abDF&#39;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">skip_while</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">!=</span> <span class="n">x</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;DF&#39;</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.skip_while', this);">Show source &equiv;</a></p>
   <div id="source-__init__.skip_while" class="source">
