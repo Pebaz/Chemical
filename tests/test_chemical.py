@@ -711,7 +711,7 @@ def test_size_hint():
 
 
 def test_par_iter():
-    # Mock paralell execution of HTTP requests
+    # Mock parallel execution of HTTP requests
     # import requests
 
     class requests:

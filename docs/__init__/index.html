@@ -1044,22 +1044,35 @@ table {
     <li class="set"><h3><a href="#header-functions">Functions</a></h3>
       
   <ul>
-    <li class="mono"><a href="#__init__.Filter">Filter</a></li>
     <li class="mono"><a href="#__init__.Inspect">Inspect</a></li>
     <li class="mono"><a href="#__init__.Peekable">Peekable</a></li>
     <li class="mono"><a href="#__init__.Skip">Skip</a></li>
     <li class="mono"><a href="#__init__.cmp">cmp</a></li>
+    <li class="mono"><a href="#__init__.cmp_by">cmp_by</a></li>
     <li class="mono"><a href="#__init__.collect">collect</a></li>
-    <li class="mono"><a href="#__init__.eq_by">eq_by</a></li>
+    <li class="mono"><a href="#__init__.count">count</a></li>
+    <li class="mono"><a href="#__init__.eq">eq</a></li>
+    <li class="mono"><a href="#__init__.filter">filter</a></li>
     <li class="mono"><a href="#__init__.find">find</a></li>
     <li class="mono"><a href="#__init__.flatten">flatten</a></li>
+    <li class="mono"><a href="#__init__.fold">fold</a></li>
+    <li class="mono"><a href="#__init__.for_each">for_each</a></li>
+    <li class="mono"><a href="#__init__.ge">ge</a></li>
     <li class="mono"><a href="#__init__.go">go</a></li>
+    <li class="mono"><a href="#__init__.gt">gt</a></li>
+    <li class="mono"><a href="#__init__.is_sorted">is_sorted</a></li>
     <li class="mono"><a href="#__init__.last">last</a></li>
-    <li class="mono"><a href="#__init__.max_by">max_by</a></li>
-    <li class="mono"><a href="#__init__.min_by">min_by</a></li>
+    <li class="mono"><a href="#__init__.le">le</a></li>
+    <li class="mono"><a href="#__init__.lt">lt</a></li>
+    <li class="mono"><a href="#__init__.max_by_key">max_by_key</a></li>
+    <li class="mono"><a href="#__init__.min_by_key">min_by_key</a></li>
+    <li class="mono"><a href="#__init__.neq">neq</a></li>
     <li class="mono"><a href="#__init__.nth">nth</a></li>
+    <li class="mono"><a href="#__init__.par_iter">par_iter</a></li>
     <li class="mono"><a href="#__init__.partition">partition</a></li>
     <li class="mono"><a href="#__init__.position">position</a></li>
+    <li class="mono"><a href="#__init__.product">product</a></li>
+    <li class="mono"><a href="#__init__.scan">scan</a></li>
     <li class="mono"><a href="#__init__.skip_while">skip_while</a></li>
     <li class="mono"><a href="#__init__.take">take</a></li>
     <li class="mono"><a href="#__init__.take_while">take_while</a></li>
@@ -1076,16 +1089,21 @@ table {
         
         </li>
         <li class="mono">
+        <span class="class_name"><a href="#__init__.NothingToPeek">NothingToPeek</a></span>
+        
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#__init__.Ordering">Ordering</a></span>
         
         </li>
         <li class="mono">
-        <span class="class_name"><a href="#__init__.Step">Step</a></span>
+        <span class="class_name"><a href="#__init__.Ref">Ref</a></span>
         
           
   <ul>
-    <li class="mono"><a href="#__init__.Step.__init__">__init__</a></li>
-    <li class="mono"><a href="#__init__.Step.next">next</a></li>
+    <li class="mono"><a href="#__init__.Ref.__init__">__init__</a></li>
+    <li class="mono"><a href="#__init__.Ref.get">get</a></li>
+    <li class="mono"><a href="#__init__.Ref.set">set</a></li>
   </ul>
 
         </li>
@@ -1100,6 +1118,8 @@ table {
   <ul>
     <li class="mono"><a href="#__init__.it.__init__">__init__</a></li>
     <li class="mono"><a href="#__init__.it.next">next</a></li>
+    <li class="mono"><a href="#__init__.it.rev">rev</a></li>
+    <li class="mono"><a href="#__init__.it.size_hint">size_hint</a></li>
   </ul>
 
         </li>
@@ -1122,291 +1142,174 @@ table {
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__', this);">Show source &equiv;</a></p>
   <div id="source-__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="n">lass</span> <span class="n">ChemicalException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-   <span class="s2">&quot;Base class for all Chemical Exceptions&quot;</span>
-<span class="n">lass</span> <span class="n">TraitException</span><span class="p">(</span><span class="n">ChemicalException</span><span class="p">):</span>
-   <span class="s2">&quot;Any error having to do with traits&quot;</span>
-<span class="n">lass</span> <span class="n">it</span><span class="p">:</span>
-   <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">   You can extend `it` with methods that produce iterators and methods that</span>
-<span class="sd">   produce a value. Decorate a class or a function with `trait` respectively to</span>
-<span class="sd">   get this to work.</span>
-<span class="sd">   &quot;&quot;&quot;</span>
-   <span class="n">traits</span> <span class="o">=</span> <span class="p">{}</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[]):</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
-   <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;</span><span class="si">{self.__class__.__name__}</span><span class="s1"> object at {hex(id(self))}&gt;&#39;</span>
-   <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="k">return</span> <span class="bp">self</span>
-   <span class="k">def</span> <span class="fm">__reversed__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;NOT IMPLEMENTED&#39;</span><span class="p">)</span>
-   <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
-   <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
-       <span class="n">keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">^</span> <span class="p">{</span><span class="s1">&#39;items&#39;</span><span class="p">}</span>
-       <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">traits</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
-   <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-       <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">it</span><span class="o">.</span><span class="n">traits</span><span class="p">:</span>
-           <span class="k">raise</span> <span class="n">TraitException</span><span class="p">(</span>
-               <span class="sa">f</span><span class="s1">&#39;Trait or extension method &quot;</span><span class="si">{name}</span><span class="s1">&quot; not found for </span><span class="si">{self}</span><span class="s1">.&#39;</span>
-           <span class="p">)</span>
-       <span class="n">clazz</span> <span class="o">=</span> <span class="n">it</span><span class="o">.</span><span class="n">traits</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-       <span class="k">class</span> <span class="nc">wrap</span><span class="p">:</span>
-           <span class="vm">__doc__</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="vm">__doc__</span>
-           <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">clazz</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-               <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span>
-               <span class="bp">self</span><span class="o">.</span><span class="n">clazz</span> <span class="o">=</span> <span class="n">clazz</span>
-               <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-           <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-               <span class="n">hid</span> <span class="o">=</span> <span class="nb">hex</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clazz</span><span class="p">))</span>
-               <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;</span><span class="si">{self.__module__}</span><span class="s1">.it.</span><span class="si">{self.name}</span><span class="s1"> at </span><span class="si">{hid}</span><span class="s1">&gt;&#39;</span>
-           <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-               <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clazz</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-       <span class="k">return</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clazz</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-   <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-<span class="n">ef</span> <span class="n">trait</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-   <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-       <span class="k">nonlocal</span> <span class="n">bind</span>
-       <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-   <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">clazz</span><span class="p">):</span>
-       <span class="vm">__doc__</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="vm">__doc__</span>
-       <span class="k">nonlocal</span> <span class="n">bind</span>
-       <span class="n">it</span><span class="o">.</span><span class="n">traits</span><span class="p">[</span><span class="n">bind</span><span class="p">]</span> <span class="o">=</span> <span class="n">clazz</span>
-       <span class="k">return</span> <span class="n">clazz</span>
-   <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bind</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-       <span class="k">return</span> <span class="n">wrapper</span>
-   <span class="n">it</span><span class="o">.</span><span class="n">traits</span><span class="p">[</span><span class="n">bind</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">bind</span>
-   <span class="n">inner</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">bind</span><span class="o">.</span><span class="vm">__doc__</span>
-   <span class="k">return</span> <span class="n">inner</span>
-<span class="n">trait</span><span class="p">(</span><span class="s1">&#39;step_by&#39;</span><span class="p">)</span>
-<span class="n">lass</span> <span class="n">Step</span><span class="p">(</span><span class="n">it</span><span class="p">):</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
-       <span class="n">it</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">step</span>
-   <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="n">nxt</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
-       <span class="k">try</span><span class="p">:</span>
-           <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-               <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
-       <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-           <span class="k">pass</span>
-       <span class="k">return</span> <span class="n">nxt</span>
-<span class="n">trait</span>
-<span class="n">lass</span> <span class="n">Filter</span><span class="p">(</span><span class="n">it</span><span class="p">):</span>
-   <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">   Filters out elements of the iterator based on the provided lambda.</span>
-<span class="sd">       :::python</span>
-<span class="sd">       print(&#39;hi&#39;)</span>
-<span class="sd">       for i in range(10):</span>
-<span class="sd">           &quot;Does something&quot;</span>
-<span class="sd">           print(i)</span>
-<span class="sd">   As you can see, this is a code example.</span>
-<span class="sd">   &quot;&quot;&quot;</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">filter_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>
-       <span class="n">it</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">filter_func</span> <span class="o">=</span> <span class="n">filter_func</span>
-   <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="k">while</span> <span class="n">res</span> <span class="p">:</span><span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">):</span>
-           <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_func</span><span class="p">(</span><span class="n">res</span><span class="p">):</span>
-               <span class="k">return</span> <span class="n">res</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="nb">all</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">))</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;any&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="nb">any</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">))</span>
-<span class="n">trait</span>
-<span class="n">lass</span> <span class="n">Skip</span><span class="p">(</span><span class="n">it</span><span class="p">):</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">times</span><span class="p">):</span>
-       <span class="n">it</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">times</span> <span class="o">=</span> <span class="n">times</span>
-       <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">times</span><span class="p">):</span>
-           <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">collect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="nb">list</span><span class="p">):</span>
-   <span class="k">if</span> <span class="n">into</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
-       <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">)</span>
-   <span class="k">else</span><span class="p">:</span>
-       <span class="k">return</span> <span class="n">into</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">nth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
-   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">num</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="p">()</span>
- <span class="err">`</span><span class="n">it</span><span class="o">.</span><span class="fm">__len__</span><span class="err">`</span> <span class="n">can</span> <span class="n">never</span> <span class="n">exist</span> <span class="n">because</span> <span class="nb">list</span><span class="p">(),</span> <span class="n">etc</span><span class="o">.</span> <span class="k">try</span> <span class="n">to</span> <span class="n">use</span> <span class="n">it</span><span class="p">,</span> <span class="n">consuming</span> <span class="n">it</span><span class="o">.</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-   <span class="n">item</span> <span class="o">=</span> <span class="kc">None</span>
-   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-       <span class="n">item</span> <span class="o">=</span> <span class="n">i</span>
-   <span class="k">return</span> <span class="n">item</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">take</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_items</span><span class="p">):</span>
-   <span class="k">return</span> <span class="n">it</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_items</span><span class="p">))</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">take_while</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">closure</span><span class="p">):</span>
-   <span class="k">return</span> <span class="n">it</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">closure</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-<span class="n">trait</span>
-<span class="n">lass</span> <span class="n">Peekable</span><span class="p">(</span><span class="n">it</span><span class="p">):</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
-       <span class="n">it</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">ahead</span> <span class="o">=</span> <span class="kc">None</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
-   <span class="k">def</span> <span class="nf">peek</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
-           <span class="k">raise</span> <span class="ne">StopIteration</span><span class="p">()</span>
-       <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ahead</span><span class="p">:</span>
-           <span class="bp">self</span><span class="o">.</span><span class="n">ahead</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
-       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ahead</span>
-   <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
-           <span class="k">raise</span> <span class="ne">StopIteration</span><span class="p">()</span>
-       <span class="k">try</span><span class="p">:</span>
-           <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ahead</span><span class="p">:</span>
-               <span class="bp">self</span><span class="o">.</span><span class="n">ahead</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
-       <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-           <span class="o">...</span>
-       <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ahead</span>
-       <span class="k">try</span><span class="p">:</span>
-           <span class="bp">self</span><span class="o">.</span><span class="n">ahead</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
-       <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-           <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
-           <span class="k">return</span> <span class="n">ret</span>
-       <span class="k">return</span> <span class="n">ret</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;max&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;min&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">max_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">closure</span><span class="p">):</span>
-   <span class="n">max_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
-   <span class="n">max_cmp</span> <span class="o">=</span> <span class="n">closure</span><span class="p">(</span><span class="n">max_val</span><span class="p">)</span>
-   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-       <span class="n">comp</span> <span class="o">=</span> <span class="n">closure</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-       <span class="k">if</span> <span class="n">comp</span> <span class="o">&gt;</span> <span class="n">max_cmp</span><span class="p">:</span>
-           <span class="n">max_val</span> <span class="o">=</span> <span class="n">i</span>
-           <span class="n">max_cmp</span> <span class="o">=</span> <span class="n">comp</span>
-   <span class="k">return</span> <span class="n">max_val</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">min_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">closure</span><span class="p">):</span>
-   <span class="n">min_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
-   <span class="n">min_cmp</span> <span class="o">=</span> <span class="n">closure</span><span class="p">(</span><span class="n">min_val</span><span class="p">)</span>
-   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-       <span class="n">comp</span> <span class="o">=</span> <span class="n">closure</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-       <span class="k">if</span> <span class="n">comp</span> <span class="o">&lt;</span> <span class="n">min_cmp</span><span class="p">:</span>
-           <span class="n">min_val</span> <span class="o">=</span> <span class="n">i</span>
-           <span class="n">min_cmp</span> <span class="o">=</span> <span class="n">comp</span>
-   <span class="k">return</span> <span class="n">min_val</span>
-<span class="n">rom</span> <span class="n">itertools</span> <span class="kn">import</span> <span class="nn">chain</span><span class="o">,</span> <span class="nn">cycle</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;chain&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">:</span> <span class="n">it</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">)))</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;cycle&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="n">it</span><span class="p">(</span><span class="n">cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">closure</span><span class="p">:</span> <span class="n">it</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">closure</span><span class="p">,</span> <span class="bp">self</span><span class="p">)))</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;enumerate&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="n">it</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">go</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span> <span class="o">...</span>
-<span class="n">trait</span>
-<span class="n">lass</span> <span class="n">Inspect</span><span class="p">(</span><span class="n">it</span><span class="p">):</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
-       <span class="n">it</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
-   <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="n">item</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-       <span class="k">return</span> <span class="n">item</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;zip&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">it</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)))</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">unzip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-   <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
-   <span class="k">try</span><span class="p">:</span>
-       <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-           <span class="n">left</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">);</span> <span class="n">right</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-   <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-       <span class="k">raise</span> <span class="n">ChemicalException</span><span class="p">(</span>
-           <span class="s1">&#39;unzip: left and right hand sides are unbalanced&#39;</span>
-       <span class="p">)</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
-   <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">skip_while</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">closure</span><span class="p">):</span>
-   <span class="n">ahead</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">peekable</span><span class="p">()</span>
-   <span class="k">while</span> <span class="n">closure</span><span class="p">(</span><span class="n">ahead</span><span class="o">.</span><span class="n">peek</span><span class="p">()):</span>
-       <span class="n">ahead</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
-   <span class="k">return</span> <span class="n">it</span><span class="p">(</span><span class="n">ahead</span><span class="p">)</span>
-<span class="n">rom</span> <span class="n">enum</span> <span class="kn">import</span> <span class="nn">Enum</span><span class="o">,</span> <span class="nn">auto</span>
-<span class="n">lass</span> <span class="n">Ordering</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-   <span class="n">Equal</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-   <span class="n">Less</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-   <span class="n">Greater</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="nb">cmp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-   <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">it</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-   <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">:</span> <span class="k">return</span> <span class="n">Ordering</span><span class="o">.</span><span class="n">Equal</span>
-   <span class="k">elif</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">:</span> <span class="k">return</span> <span class="n">Ordering</span><span class="o">.</span><span class="n">Less</span>
-   <span class="k">elif</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">:</span> <span class="k">return</span> <span class="n">Ordering</span><span class="o">.</span><span class="n">Greater</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;gt&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmp</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">==</span> <span class="n">Ordering</span><span class="o">.</span><span class="n">Greater</span><span class="p">)</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;ge&#39;</span><span class="p">)(</span>
-   <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmp</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Ordering</span><span class="o">.</span><span class="n">Greater</span><span class="p">,</span> <span class="n">Ordering</span><span class="o">.</span><span class="n">Equal</span><span class="p">)</span>
+    <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
 
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;lt&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmp</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">==</span> <span class="n">Ordering</span><span class="o">.</span><span class="n">Less</span><span class="p">)</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;le&#39;</span><span class="p">)(</span>
-   <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmp</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Ordering</span><span class="o">.</span><span class="n">Less</span><span class="p">,</span> <span class="n">Ordering</span><span class="o">.</span><span class="n">Equal</span><span class="p">)</span>
 
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">eq_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">closure</span><span class="p">):</span>
-   <span class="n">other</span> <span class="o">=</span> <span class="n">it</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-   <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-       <span class="k">try</span><span class="p">:</span>
-           <span class="n">a</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-       <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-           <span class="n">a</span> <span class="o">=</span> <span class="ne">StopIteration</span>
-       <span class="k">try</span><span class="p">:</span>
-           <span class="n">b</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-       <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-           <span class="n">b</span> <span class="o">=</span> <span class="ne">StopIteration</span>
-       <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="ne">StopIteration</span> <span class="ow">and</span> <span class="n">b</span> <span class="o">==</span> <span class="ne">StopIteration</span><span class="p">:</span>
-           <span class="k">return</span> <span class="kc">True</span>
-       <span class="k">elif</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="ne">StopIteration</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="ne">StopIteration</span><span class="p">):</span>
-           <span class="k">return</span> <span class="kc">False</span>
-       <span class="k">elif</span> <span class="ow">not</span> <span class="n">closure</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-           <span class="k">return</span> <span class="kc">False</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;eq&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq_by</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">))</span>
-<span class="n">rait</span><span class="p">(</span><span class="s1">&#39;neq&#39;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">closure</span><span class="p">):</span>
-   <span class="k">try</span><span class="p">:</span>
-       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">closure</span><span class="p">)</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
-   <span class="k">except</span> <span class="ne">StopIteration</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-       <span class="o">...</span>
-   <span class="k">raise</span> <span class="n">ChemicalException</span><span class="p">(</span>
-       <span class="s1">&#39;find: item matching provided lambda could not be found&#39;</span>
-   <span class="p">)</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">closure</span><span class="p">):</span>
-   <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">enumerate</span><span class="p">():</span>
-       <span class="k">if</span> <span class="n">closure</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
-           <span class="k">return</span> <span class="n">i</span>
-   <span class="k">raise</span> <span class="n">ChemicalException</span><span class="p">(</span>
-       <span class="s1">&#39;position: item matching provided lambda is not in collection&#39;</span>
-   <span class="p">)</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">partition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">closure</span><span class="p">):</span>
-   <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">   This is a code example:</span>
-<span class="sd">   ```</span>
-<span class="sd">   asdf.asdf()</span>
-<span class="sd">   ```</span>
-<span class="sd">   &quot;&quot;&quot;</span>
-   <span class="n">parts</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
-   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-       <span class="n">parts</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="ow">not</span> <span class="n">closure</span><span class="p">(</span><span class="n">i</span><span class="p">))]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-   <span class="k">return</span> <span class="n">parts</span>
-<span class="n">trait</span>
-<span class="n">ef</span> <span class="n">flatten</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-   <span class="n">links</span> <span class="o">=</span> <span class="n">it</span><span class="p">()</span>
-   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-       <span class="k">try</span><span class="p">:</span>
-           <span class="nb">iter</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-           <span class="n">links</span> <span class="o">=</span> <span class="n">links</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-       <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-           <span class="n">links</span> <span class="o">=</span> <span class="n">links</span><span class="o">.</span><span class="n">chain</span><span class="p">([</span><span class="n">i</span><span class="p">])</span>
-   <span class="k">return</span> <span class="n">links</span>
+<span class="k">class</span> <span class="nc">ChemicalException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="s2">&quot;Base class for all Chemical Exceptions&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">TraitException</span><span class="p">(</span><span class="n">ChemicalException</span><span class="p">):</span>
+    <span class="s2">&quot;Any error having to do with traits&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">NothingToPeek</span><span class="p">(</span><span class="n">ChemicalException</span><span class="p">):</span>
+    <span class="s2">&quot;Raised when a call to .peek() cannot yield another element&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">it</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    You can extend `it` with methods that produce iterators and methods that</span>
+<span class="sd">    produce a value. Decorate a class or a function with `trait` respectively to</span>
+<span class="sd">    get this to work.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">traits</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[],</span> <span class="n">reverse_seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">it</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span> <span class="o">=</span> <span class="n">bounds</span> <span class="ow">or</span> <span class="n">items</span><span class="o">.</span><span class="n">size_hint</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse_seed</span> <span class="ow">or</span> <span class="n">items</span><span class="o">.</span><span class="n">reverse</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">bounds</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span> <span class="o">=</span> <span class="n">bounds</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse_seed</span> <span class="ow">or</span> <span class="n">it</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">items</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+        <span class="k">return</span> <span class="n">it</span><span class="p">(</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">),</span> <span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;</span><span class="si">{self.__class__.__name__}</span><span class="s1"> object at {hex(id(self))}&gt;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__reversed__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChemicalException</span><span class="p">(</span>
+                <span class="s1">&#39;Cannot reverse an iterator that has already yielded at least &#39;</span>
+                <span class="s1">&#39;one item with next()&#39;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChemicalException</span><span class="p">(</span><span class="s1">&#39;Underlying collection cannot be reversed.&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_reversed__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__get_reversed__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">it</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_hint</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_next__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__get_next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">^</span> <span class="p">{</span><span class="s1">&#39;items&#39;</span><span class="p">}</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">traits</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">it</span><span class="o">.</span><span class="n">traits</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TraitException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Trait or extension method &quot;</span><span class="si">{name}</span><span class="s1">&quot; not found for </span><span class="si">{self}</span><span class="s1">.&#39;</span>
+            <span class="p">)</span>
+
+        <span class="n">clazz</span> <span class="o">=</span> <span class="n">it</span><span class="o">.</span><span class="n">traits</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="k">class</span> <span class="nc">wrap</span><span class="p">:</span>
+            <span class="vm">__doc__</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="vm">__doc__</span>
+
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">clazz</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">clazz</span> <span class="o">=</span> <span class="n">clazz</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+            <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="n">hid</span> <span class="o">=</span> <span class="nb">hex</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clazz</span><span class="p">))</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;</span><span class="si">{self.__module__}</span><span class="s1">.it.</span><span class="si">{self.name}</span><span class="s1"> at </span><span class="si">{hid}</span><span class="s1">&gt;&#39;</span>
+
+            <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clazz</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clazz</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rev</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">size_hint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span>
+
+
+<span class="k">def</span> <span class="nf">trait</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">nonlocal</span> <span class="n">bind</span>
+        <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">clazz</span><span class="p">):</span>
+        <span class="vm">__doc__</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="vm">__doc__</span>
+        <span class="k">nonlocal</span> <span class="n">bind</span>
+        <span class="n">it</span><span class="o">.</span><span class="n">traits</span><span class="p">[</span><span class="n">bind</span><span class="p">]</span> <span class="o">=</span> <span class="n">clazz</span>
+        <span class="k">return</span> <span class="n">clazz</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bind</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="n">it</span><span class="o">.</span><span class="n">traits</span><span class="p">[</span><span class="n">bind</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">bind</span>
+    <span class="n">inner</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">bind</span><span class="o">.</span><span class="vm">__doc__</span>
+    <span class="k">return</span> <span class="n">inner</span>
+
+
+<span class="k">class</span> <span class="nc">Ordering</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">Equal</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">Less</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">Greater</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">Ref</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">return</span> <span class="n">val</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;_&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChemicalException</span><span class="p">(</span><span class="s2">&quot;To get a reference&#39;s value, use: `ref._`&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+
+    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+
+
+<span class="c1"># Allow all iterators and aggregators to be available upon import</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="n">aggregators</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="n">iterators</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 
   </div>
@@ -1416,37 +1319,6 @@ table {
   <section id="section-items">
 
     <h2 class="section-title" id="header-functions">Functions</h2>
-      
-  <div class="item">
-    <div class="name def" id="__init__.Filter">
-    <p>def <span class="ident">Filter</span>(</p><p>*args, **kwargs)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Filters out elements of the iterator based on the provided lambda.</p>
-<div class="codehilite"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hi&#39;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="s2">&quot;Does something&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-</pre></div>
-
-
-<p>As you can see, this is a code example.</p></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.Filter', this);">Show source &equiv;</a></p>
-  <div id="source-__init__.Filter" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="k">nonlocal</span> <span class="n">bind</span>
-    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</pre></div>
-
-  </div>
-</div>
-
-  </div>
-  
       
   <div class="item">
     <div class="name def" id="__init__.Inspect">
@@ -1500,6 +1372,7 @@ table {
 
     
   
+    <div class="desc"><p>Lazily skip a number of items in the iterator chain.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.Skip', this);">Show source &equiv;</a></p>
   <div id="source-__init__.Skip" class="source">
@@ -1537,6 +1410,28 @@ table {
   
       
   <div class="item">
+    <div class="name def" id="__init__.cmp_by">
+    <p>def <span class="ident">cmp_by</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.cmp_by', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.cmp_by" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
     <div class="name def" id="__init__.collect">
     <p>def <span class="ident">collect</span>(</p><p>*args, **kwargs)</p>
     </div>
@@ -1559,16 +1454,69 @@ table {
   
       
   <div class="item">
-    <div class="name def" id="__init__.eq_by">
-    <p>def <span class="ident">eq_by</span>(</p><p>*args, **kwargs)</p>
+    <div class="name def" id="__init__.count">
+    <p>def <span class="ident">count</span>(</p><p>*args, **kwargs)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.eq_by', this);">Show source &equiv;</a></p>
-  <div id="source-__init__.eq_by" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.count', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.count" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="__init__.eq">
+    <p>def <span class="ident">eq</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.eq', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.eq" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="__init__.filter">
+    <p>def <span class="ident">filter</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Filters out elements of the iterator based on the provided lambda.</p>
+<div class="codehilite"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hi&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="s2">&quot;Does something&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+
+
+<p>As you can see, this is a code example.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.filter', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.filter" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1625,6 +1573,72 @@ table {
   
       
   <div class="item">
+    <div class="name def" id="__init__.fold">
+    <p>def <span class="ident">fold</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.fold', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.fold" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="__init__.for_each">
+    <p>def <span class="ident">for_each</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.for_each', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.for_each" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="__init__.ge">
+    <p>def <span class="ident">ge</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.ge', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.ge" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
     <div class="name def" id="__init__.go">
     <p>def <span class="ident">go</span>(</p><p>*args, **kwargs)</p>
     </div>
@@ -1635,6 +1649,50 @@ table {
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.go', this);">Show source &equiv;</a></p>
   <div id="source-__init__.go" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="__init__.gt">
+    <p>def <span class="ident">gt</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.gt', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.gt" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="__init__.is_sorted">
+    <p>def <span class="ident">is_sorted</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.is_sorted', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.is_sorted" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1669,16 +1727,16 @@ table {
   
       
   <div class="item">
-    <div class="name def" id="__init__.max_by">
-    <p>def <span class="ident">max_by</span>(</p><p>*args, **kwargs)</p>
+    <div class="name def" id="__init__.le">
+    <p>def <span class="ident">le</span>(</p><p>*args, **kwargs)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.max_by', this);">Show source &equiv;</a></p>
-  <div id="source-__init__.max_by" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.le', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.le" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1691,16 +1749,82 @@ table {
   
       
   <div class="item">
-    <div class="name def" id="__init__.min_by">
-    <p>def <span class="ident">min_by</span>(</p><p>*args, **kwargs)</p>
+    <div class="name def" id="__init__.lt">
+    <p>def <span class="ident">lt</span>(</p><p>*args, **kwargs)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.min_by', this);">Show source &equiv;</a></p>
-  <div id="source-__init__.min_by" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.lt', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.lt" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="__init__.max_by_key">
+    <p>def <span class="ident">max_by_key</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.max_by_key', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.max_by_key" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="__init__.min_by_key">
+    <p>def <span class="ident">min_by_key</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.min_by_key', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.min_by_key" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="__init__.neq">
+    <p>def <span class="ident">neq</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.neq', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.neq" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1723,6 +1847,62 @@ table {
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.nth', this);">Show source &equiv;</a></p>
   <div id="source-__init__.nth" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="__init__.par_iter">
+    <p>def <span class="ident">par_iter</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Iterate through the elements of an iterator concurrently.</p>
+<p>Since CPython is only able to execute 1 true thread at a time, only the
+illusion of parallelism is achievable, which can definitely be highly useful
+in situations where tasks need to not execute sequencially.</p>
+<p>Please see <a href="https://blog.golang.org/waza-talk">this talk</a> on why concurrency
+is not the same as parallelism.</p>
+<p>It should be noted that the name "par_iter" was taken from Rayon's
+<a href="https://docs.rs/rayon/0.6.0/rayon/par_iter/index.html">par_iter</a> function.</p>
+<p>The order of items in the underlying iterator are maintained.</p>
+<p>If your item handling code has side-effects, <code>par_iter</code> may not be the best
+solution for you because it handles each item concurrently and those side
+effects may occur in a different order.</p>
+<p><strong>Examples</strong></p>
+<p>The order of the returned elements is maintained even though they are
+processed concurrently.</p>
+<div class="codehilite"><pre><span></span><span class="n">itr</span> <span class="o">=</span> <span class="n">it</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">par_iter</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">itr</span><span class="o">.</span><span class="n">next</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="k">assert</span> <span class="n">itr</span><span class="o">.</span><span class="n">next</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="k">assert</span> <span class="n">itr</span><span class="o">.</span><span class="n">next</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span>
+</pre></div>
+
+
+<p>Making HTTP requests is faster using <code>par_iter</code>:</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">requests</span> <span class="kn">import</span> <span class="n">get</span> <span class="k">as</span> <span class="n">GET</span>
+
+<span class="n">urls</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="p">(</span><span class="n">it</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="n">GET</span><span class="p">(</span><span class="n">u</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">text</span> <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">ok</span> <span class="k">else</span> <span class="n">u</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">par_iter</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.par_iter', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.par_iter" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1769,6 +1949,50 @@ table {
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.position', this);">Show source &equiv;</a></p>
   <div id="source-__init__.position" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="__init__.product">
+    <p>def <span class="ident">product</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.product', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.product" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">nonlocal</span> <span class="n">bind</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="__init__.scan">
+    <p>def <span class="ident">scan</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.scan', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.scan" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">nonlocal</span> <span class="n">bind</span>
     <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1945,6 +2169,49 @@ table {
       </div>
       
       <div class="item">
+      <p id="__init__.NothingToPeek" class="name">class <span class="ident">NothingToPeek</span></p>
+      
+  
+    <div class="desc"><p>Raised when a call to .peek() cannot yield another element</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.NothingToPeek', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.NothingToPeek" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">NothingToPeek</span><span class="p">(</span><span class="n">ChemicalException</span><span class="p">):</span>
+    <span class="s2">&quot;Raised when a call to .peek() cannot yield another element&quot;</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#__init__.NothingToPeek">NothingToPeek</a></li>
+          <li><a href="#__init__.ChemicalException">ChemicalException</a></li>
+          <li>builtins.Exception</li>
+          <li>builtins.BaseException</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="__init__.NothingToPeek.args" class="name">var <span class="ident">args</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#__init__.ChemicalException">ChemicalException</a></code>.<code><a href="#__init__.ChemicalException.args">args</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
       <p id="__init__.Ordering" class="name">class <span class="ident">Ordering</span></p>
       
   
@@ -2024,28 +2291,30 @@ table {
       </div>
       
       <div class="item">
-      <p id="__init__.Step" class="name">class <span class="ident">Step</span></p>
+      <p id="__init__.Ref" class="name">class <span class="ident">Ref</span></p>
       
   
-    <div class="desc"><p>You can extend <code>it</code> with methods that produce iterators and methods that
-produce a value. Decorate a class or a function with <code>trait</code> respectively to
-get this to work.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.Step', this);">Show source &equiv;</a></p>
-  <div id="source-__init__.Step" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Step</span><span class="p">(</span><span class="n">it</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
-        <span class="n">it</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">step</span>
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.Ref', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.Ref" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Ref</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
 
-    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">nxt</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-            <span class="k">pass</span>
-        <span class="k">return</span> <span class="n">nxt</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">return</span> <span class="n">val</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;_&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChemicalException</span><span class="p">(</span><span class="s2">&quot;To get a reference&#39;s value, use: `ref._`&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+
+    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
 </pre></div>
 
   </div>
@@ -2055,26 +2324,14 @@ get this to work.</p></div>
       <div class="class">
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
-          <li><a href="#__init__.Step">Step</a></li>
-          <li><a href="#__init__.it">it</a></li>
+          <li><a href="#__init__.Ref">Ref</a></li>
           <li>builtins.object</li>
           </ul>
-          <h3>Class variables</h3>
-            <div class="item">
-            <p id="__init__.Step.traits" class="name">var <span class="ident">traits</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
           <h3>Static methods</h3>
             
   <div class="item">
-    <div class="name def" id="__init__.Step.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, items, step)</p>
+    <div class="name def" id="__init__.Ref.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, val)</p>
     </div>
     
 
@@ -2082,11 +2339,10 @@ get this to work.</p></div>
   
     <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.Step.__init__', this);">Show source &equiv;</a></p>
-  <div id="source-__init__.Step.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
-    <span class="n">it</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">step</span>
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.Ref.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.Ref.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
 </pre></div>
 
   </div>
@@ -2096,18 +2352,39 @@ get this to work.</p></div>
   
             
   <div class="item">
-    <div class="name def" id="__init__.Step.next">
-    <p>def <span class="ident">next</span>(</p><p>self)</p>
+    <div class="name def" id="__init__.Ref.get">
+    <p>def <span class="ident">get</span>(</p><p>self)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.Step.next', this);">Show source &equiv;</a></p>
-  <div id="source-__init__.Step.next" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.Ref.get', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.Ref.get" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="__init__.Ref.set">
+    <p>def <span class="ident">set</span>(</p><p>self, val)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.Ref.set', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.Ref.set" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
 </pre></div>
 
   </div>
@@ -2117,7 +2394,7 @@ get this to work.</p></div>
   
           <h3>Instance variables</h3>
             <div class="item">
-            <p id="__init__.Step.step" class="name">var <span class="ident">step</span></p>
+            <p id="__init__.Ref.val" class="name">var <span class="ident">val</span></p>
             
 
             
@@ -2190,8 +2467,32 @@ get this to work.</p></div>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">traits</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[],</span> <span class="n">reverse_seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">it</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span> <span class="o">=</span> <span class="n">bounds</span> <span class="ow">or</span> <span class="n">items</span><span class="o">.</span><span class="n">size_hint</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse_seed</span> <span class="ow">or</span> <span class="n">items</span><span class="o">.</span><span class="n">reverse</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">bounds</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span> <span class="o">=</span> <span class="n">bounds</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse_seed</span> <span class="ow">or</span> <span class="n">it</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">items</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+        <span class="k">return</span> <span class="n">it</span><span class="p">(</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">),</span> <span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;</span><span class="si">{self.__class__.__name__}</span><span class="s1"> object at {hex(id(self))}&gt;&#39;</span>
@@ -2200,9 +2501,26 @@ get this to work.</p></div>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="fm">__reversed__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;NOT IMPLEMENTED&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChemicalException</span><span class="p">(</span>
+                <span class="s1">&#39;Cannot reverse an iterator that has already yielded at least &#39;</span>
+                <span class="s1">&#39;one item with next()&#39;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChemicalException</span><span class="p">(</span><span class="s1">&#39;Underlying collection cannot be reversed.&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_reversed__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__get_reversed__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">it</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_hint</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_next__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__get_next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -2237,6 +2555,12 @@ get this to work.</p></div>
 
     <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rev</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">size_hint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span>
 </pre></div>
 
   </div>
@@ -2264,7 +2588,7 @@ get this to work.</p></div>
             
   <div class="item">
     <div class="name def" id="__init__.it.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, items=[])</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, items=[], reverse_seed=None, bounds=[])</p>
     </div>
     
 
@@ -2274,8 +2598,26 @@ get this to work.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.it.__init__', this);">Show source &equiv;</a></p>
   <div id="source-__init__.it.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[]):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[],</span> <span class="n">reverse_seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">it</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span> <span class="o">=</span> <span class="n">bounds</span> <span class="ow">or</span> <span class="n">items</span><span class="o">.</span><span class="n">size_hint</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse_seed</span> <span class="ow">or</span> <span class="n">items</span><span class="o">.</span><span class="n">reverse</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">bounds</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span> <span class="o">=</span> <span class="n">bounds</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse_seed</span> <span class="ow">or</span> <span class="n">it</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">items</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="kc">None</span>
 </pre></div>
 
   </div>
@@ -2297,6 +2639,48 @@ get this to work.</p></div>
   <div id="source-__init__.it.next" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="__init__.it.rev">
+    <p>def <span class="ident">rev</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.it.rev', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.it.rev" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">rev</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="__init__.it.size_hint">
+    <p>def <span class="ident">size_hint</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.it.size_hint', this);">Show source &equiv;</a></p>
+  <div id="source-__init__.it.size_hint" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">size_hint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bound</span>
 </pre></div>
 
   </div>

@@ -271,6 +271,52 @@ def scan(self, seed, closure):
 
 @trait
 def par_iter(self):
+    """
+    Iterate through the elements of an iterator concurrently.
+
+    Since CPython is only able to execute 1 true thread at a time, only the
+    illusion of parallelism is achievable, which can definitely be highly useful
+    in situations where tasks need to not execute sequencially.
+
+    Please see [this talk](https://blog.golang.org/waza-talk) on why concurrency
+    is not the same as parallelism.
+
+    It should be noted that the name "par_iter" was taken from Rayon's
+    [par_iter](https://docs.rs/rayon/0.6.0/rayon/par_iter/index.html) function.
+
+    The order of items in the underlying iterator are maintained.
+
+    If your item handling code has side-effects, `par_iter` may not be the best
+    solution for you because it handles each item concurrently and those side
+    effects may occur in a different order.
+
+    **Examples**
+
+    The order of the returned elements is maintained even though they are
+    processed concurrently.
+
+        :::python
+
+        itr = it(range(3)).par_iter()
+        assert itr.next() == 0
+        assert itr.next() == 1
+        assert itr.next() == 2
+
+    Making HTTP requests is faster using `par_iter`:
+
+        :::python
+        from requests import get as GET
+
+        urls = [...]
+        
+        results = (it(urls)
+            .map(lambda u: GET(u))
+            .map(lambda u: u.text if u.ok else u.reason)
+            .par_iter()
+            .collect()
+        )
+    """
+
     def _process_items(the_items):
         yield
 

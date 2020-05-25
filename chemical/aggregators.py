@@ -3,6 +3,18 @@ from . import it, trait, ChemicalException, Ordering
 
 @trait('all')
 def all_it(self, func):
+    """
+    Returns a boolean indicating the results of calling `func` on each element.
+
+    If all results are True, then True is returned, else False.
+
+    **Examples**
+
+        :::python
+
+        assert it(range(3)).all(lambda x: x < 10000)
+        assert it('asdf').all(lambda x: x in 'asdf')
+    """
     return all(func(i) for i in self)
 
 
