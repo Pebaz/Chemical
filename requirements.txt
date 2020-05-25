@@ -1,3 +1,2 @@
 # For running tests:
 pytest
-requests

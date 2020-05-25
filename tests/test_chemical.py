@@ -711,14 +711,23 @@ def test_size_hint():
 
 
 def test_par_iter():
-    import requests
+    # Mock paralell execution of HTTP requests
+    # import requests
+
+    class requests:
+        def __init__(self):
+            self.status_code = 200
+            self.reason = 'OK'
+            self.ok = True
+
+        @staticmethod
+        def get(url, timeout):
+            return requests()
 
     urls = [
-        'https://www.google.com',
         'https://aws.amazon.com',
-        'https://www.microsoft.com',
-        'https://www.rust-lang.org',
-        'https://www.python.org'
+        'https://www.google.com',
+        'https://www.microsoft.com'
     ]
 
     assert (it(urls)
@@ -729,7 +738,7 @@ def test_par_iter():
     ) == [200] * len(urls)
 
     assert (it(urls)
-        .map(lambda u: requests.get(u))
+        .map(lambda u: requests.get(u, timeout=1))
         .map(lambda u: u.status_code if u.ok else u.reason)
         .par_iter()
         .rev()
@@ -737,7 +746,7 @@ def test_par_iter():
     ) == [200] * len(urls)
 
     assert (it(urls)
-        .map(lambda u: requests.get(u))
+        .map(lambda u: requests.get(u, timeout=1))
         .map(lambda u: u.status_code if u.ok else u.reason)
         .rev()
         .par_iter()
