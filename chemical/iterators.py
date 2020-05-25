@@ -6,6 +6,13 @@ from . import it, trait, ChemicalException, NothingToPeek, Ref
 class Skip(it):
     """
     Lazily skip a number of items in the iterator chain.
+
+    **Examples**
+
+        :::python
+
+        assert it('asdf').skip(1).collect(str) == 'sdf'
+        assert it('asdf').rev().skip(1).rev().collect(str) == 'asd'
     """
 
     def __init__(self, items, times):
@@ -48,6 +55,16 @@ class Skip(it):
 
 @trait('step_by')
 class Step(it):
+    """
+    If > 1, the number of elements to skip between each returned value.
+
+    **Examples**
+
+        :::python
+
+        assert it(range(10)).step_by(2).collect() == [0, 2, 4, 6, 8]
+        assert it(range(10)).rev().step_by(3).collect() == [9, 6, 3, 0]
+    """
     def __init__(self, items, step):
         it.__init__(self, items)
         self.step = step
@@ -74,14 +91,12 @@ def filter(self, filter_func):
     """
     Filters out elements of the iterator based on the provided lambda.
 
+    **Examples**
+
         :::python
 
-        print('hi')
-        for i in range(10):
-            "Does something"
-            print(i)
-
-    As you can see, this is a code example.
+        assert it(range(5)).filter(lambda x: not x % 2).collect() == [0, 2, 4]
+        assert it('abcd').filter(lambda x: x in 'bd').collect(str) == 'bd'
     """
     return it(
         (i for i in self if filter_func(i)),
@@ -92,12 +107,31 @@ def filter(self, filter_func):
 
 @trait
 def take(self, num_items):
+    """
+    Returns only the number of items you specify from an iterator.
+
+    **Examples**
+
+        :::python
+
+        assert it(range(5)).take(2).collect() == [0, 1]
+        assert it(range(5)).rev().take(3).collect() == [4, 3, 2]
+    """
     taken = [next(self) for i in range(num_items)]
     return it(iter(taken), reversed(taken), [num_items] * 2)
 
 
 @trait
 def take_while(self, closure):
+    """
+    Only returns elements from the iterator while a given function returns True.
+
+    **Examples**
+
+        :::python
+
+        assert it('ab7f').take_while(lambda x: x.isalpha()).collect(str) == 'ab'
+    """
     return it(
         (i for i in self if closure(i)),
         it(i for i in self.reverse if closure(i)),
@@ -107,6 +141,22 @@ def take_while(self, closure):
 
 @trait
 class Peekable(it):
+    """
+    Adds a method to any iterator that allows the next element to be revealed
+    without consuming it.
+
+    **Examples**
+
+        :::python
+
+        itr = it('cba').rev().peekable()
+        assert itr.peek() == 'a'
+        assert itr.next() == 'a'
+        assert itr.peek() == 'b'
+        assert itr.next() == 'b'
+        assert itr.peek() == 'c'
+        assert itr.next() == 'c'
+    """
     def __init__(self, items):
         it.__init__(self, items)
         self.ahead = None
@@ -146,6 +196,14 @@ class Peekable(it):
 
 @trait('chain')
 def chain_it(self, itr):
+    """
+
+    **Examples**
+
+        :::python
+
+        
+    """
     from itertools import chain
     chained = it(itr)
     return it(
@@ -163,12 +221,28 @@ def chain_it(self, itr):
 
 @trait('cycle')
 def cycle_it(self):
+    """
+
+    **Examples**
+
+        :::python
+
+        
+    """
     from itertools import cycle
     return it(cycle(self), it(cycle(self.reverse)))
 
 
 @trait('map')
 def map_it(self, closure):
+    """
+
+    **Examples**
+
+        :::python
+
+        
+    """
     return it(
         map(closure, self),
         map(closure, self.reverse),
@@ -178,11 +252,27 @@ def map_it(self, closure):
 
 @trait('enumerate')
 def enumerate_it(self):
+    """
+
+    **Examples**
+
+        :::python
+
+        
+    """
     return it(enumerate(self), enumerate(self.reverse), self.size_hint())
 
 
 @trait
 class Inspect(it):
+    """
+
+    **Examples**
+
+        :::python
+
+        
+    """
     def __init__(self, items, func):
         it.__init__(self, items)
         self.func = func
@@ -200,6 +290,14 @@ class Inspect(it):
 
 @trait('zip')
 def zip_it(self, other):
+    """
+
+    **Examples**
+
+        :::python
+
+        
+    """
     other_it = it(other)
     return it(
         zip(self, other_it),
@@ -213,6 +311,14 @@ def zip_it(self, other):
 
 @trait
 def skip_while(self, closure):
+    """
+
+    **Examples**
+
+        :::python
+
+        
+    """
     ahead = self.peekable()
 
     try:
@@ -234,6 +340,14 @@ def skip_while(self, closure):
 
 @trait
 def flatten(self):
+    """
+
+    **Examples**
+
+        :::python
+
+        
+    """
     links = it()
     for i in self:
         try:
@@ -246,6 +360,14 @@ def flatten(self):
 
 @trait
 def for_each(self, closure):
+    """
+
+    **Examples**
+
+        :::python
+
+        
+    """
     return it(
         (closure(i) for i in self),
         (closure(i) for i in self.reverse),
@@ -255,11 +377,27 @@ def for_each(self, closure):
 
 @trait
 def fold(self, seed, closure):
+    """
+
+    **Examples**
+
+        :::python
+
+        
+    """
     return self.scan(seed, closure).last()
 
 
 @trait
 def scan(self, seed, closure):
+    """
+
+    **Examples**
+
+        :::python
+
+
+    """
     the_seed = Ref(seed)
 
     return it(
@@ -308,7 +446,7 @@ def par_iter(self):
         from requests import get as GET
 
         urls = [...]
-        
+
         results = (it(urls)
             .map(lambda u: GET(u))
             .map(lambda u: u.text if u.ok else u.reason)

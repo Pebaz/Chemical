@@ -1328,6 +1328,8 @@ table {
 
     
   
+    <div class="desc"><p><strong>Examples</strong></p>
+<p>:::python</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.Inspect', this);">Show source &equiv;</a></p>
   <div id="source-__init__.Inspect" class="source">
@@ -1350,6 +1352,17 @@ table {
 
     
   
+    <div class="desc"><p>Adds a method to any iterator that allows the next element to be revealed
+without consuming it.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="n">itr</span> <span class="o">=</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;cba&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rev</span><span class="p">()</span><span class="o">.</span><span class="n">peekable</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">itr</span><span class="o">.</span><span class="n">peek</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;a&#39;</span>
+<span class="k">assert</span> <span class="n">itr</span><span class="o">.</span><span class="n">next</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;a&#39;</span>
+<span class="k">assert</span> <span class="n">itr</span><span class="o">.</span><span class="n">peek</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;b&#39;</span>
+<span class="k">assert</span> <span class="n">itr</span><span class="o">.</span><span class="n">next</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;b&#39;</span>
+<span class="k">assert</span> <span class="n">itr</span><span class="o">.</span><span class="n">peek</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;c&#39;</span>
+<span class="k">assert</span> <span class="n">itr</span><span class="o">.</span><span class="n">next</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;c&#39;</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.Peekable', this);">Show source &equiv;</a></p>
   <div id="source-__init__.Peekable" class="source">
@@ -1372,7 +1385,11 @@ table {
 
     
   
-    <div class="desc"><p>Lazily skip a number of items in the iterator chain.</p></div>
+    <div class="desc"><p>Lazily skip a number of items in the iterator chain.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;sdf&#39;</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rev</span><span class="p">()</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rev</span><span class="p">()</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;asd&#39;</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.Skip', this);">Show source &equiv;</a></p>
   <div id="source-__init__.Skip" class="source">
@@ -1506,14 +1523,10 @@ table {
     
   
     <div class="desc"><p>Filters out elements of the iterator based on the provided lambda.</p>
-<div class="codehilite"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hi&#39;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="s2">&quot;Does something&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-</pre></div>
-
-
-<p>As you can see, this is a code example.</p></div>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;abcd&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">in</span> <span class="s1">&#39;bd&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;bd&#39;</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.filter', this);">Show source &equiv;</a></p>
   <div id="source-__init__.filter" class="source">
@@ -1558,6 +1571,8 @@ table {
 
     
   
+    <div class="desc"><p><strong>Examples</strong></p>
+<p>:::python</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.flatten', this);">Show source &equiv;</a></p>
   <div id="source-__init__.flatten" class="source">
@@ -1580,6 +1595,8 @@ table {
 
     
   
+    <div class="desc"><p><strong>Examples</strong></p>
+<p>:::python</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.fold', this);">Show source &equiv;</a></p>
   <div id="source-__init__.fold" class="source">
@@ -1602,6 +1619,8 @@ table {
 
     
   
+    <div class="desc"><p><strong>Examples</strong></p>
+<p>:::python</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.for_each', this);">Show source &equiv;</a></p>
   <div id="source-__init__.for_each" class="source">
@@ -1990,6 +2009,8 @@ processed concurrently.</p>
 
     
   
+    <div class="desc"><p><strong>Examples</strong></p>
+<p>:::python</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.scan', this);">Show source &equiv;</a></p>
   <div id="source-__init__.scan" class="source">
@@ -2012,6 +2033,8 @@ processed concurrently.</p>
 
     
   
+    <div class="desc"><p><strong>Examples</strong></p>
+<p>:::python</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.skip_while', this);">Show source &equiv;</a></p>
   <div id="source-__init__.skip_while" class="source">
@@ -2034,6 +2057,11 @@ processed concurrently.</p>
 
     
   
+    <div class="desc"><p>Returns only the number of items you specify from an iterator.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">rev</span><span class="p">()</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.take', this);">Show source &equiv;</a></p>
   <div id="source-__init__.take" class="source">
@@ -2056,6 +2084,10 @@ processed concurrently.</p>
 
     
   
+    <div class="desc"><p>Only returns elements from the iterator while a given function returns True.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;ab7f&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">take_while</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">isalpha</span><span class="p">())</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;ab&#39;</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.take_while', this);">Show source &equiv;</a></p>
   <div id="source-__init__.take_while" class="source">
