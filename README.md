@@ -91,7 +91,8 @@ $ pytest
 
 ## Documentation
 
-You can view the generated documentation [here](https://github.com/).
+You can view the generated documentation
+[here](https://pebaz.github.io/Chemical/index.html).
 
 You can also look at the source code for more insight on how you can extend `it`
 to have more iterators and aggregators specific to your own application.
