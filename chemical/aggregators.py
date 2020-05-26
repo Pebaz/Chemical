@@ -41,7 +41,7 @@ def collect(self, into=list):
     Special handling is given to the `str` type. `__str__()` is called on each
     element and then the resulting list of strings are concatenated together to
     form one string.
-    
+
     All other collections are formed by passing the iterator to the constructor.
 
     **Examples**
@@ -293,7 +293,6 @@ def cmp(self, other):
     if a == b: return Ordering.Equal
     elif a < b: return Ordering.Less
     elif a > b: return Ordering.Greater
-
 
 
 @trait
