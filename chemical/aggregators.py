@@ -21,7 +21,7 @@ def all_it(self, func):
 @trait('any')
 def any_it(self, func):
     """
-    
+    Returns True if any calling the given function returns True for any item.
 
     **Examples**
 
@@ -36,7 +36,13 @@ def any_it(self, func):
 @trait
 def collect(self, into=list):
     """
+    Consumes the iterator and returns a collection of the given type.
+
+    Special handling is given to the `str` type. `__str__()` is called on each
+    element and then the resulting list of strings are concatenated together to
+    form one string.
     
+    All other collections are formed by passing the iterator to the constructor.
 
     **Examples**
 
@@ -56,7 +62,16 @@ def collect(self, into=list):
 @trait
 def nth(self, num):
     """
-    
+    Returns the nth element from an iterator.
+
+    If 3 is passed, this returns the 3rd element, and so on.
+
+    If a negative number is passed, this is the equivalent of the following:
+
+        :::python
+
+        itr = it('abc')
+        assert itr.nth(-1) == itr.rev().nth(1)
 
     **Examples**
 
@@ -66,10 +81,12 @@ def nth(self, num):
         assert it('abc').skip(1).nth(2) == 'c'
         assert it('abc').cycle().nth(23) == 'b'
     """
-    if num <= 0:
+    if num == 0:
         raise ChemicalException('nth: to take the first item, use integer 1')
-    for i in range(num):
-        item = next(self)
+
+    for i in range(abs(num)):
+        item = next(self if num > 0 else self.reverse)
+
     return item
 
 
