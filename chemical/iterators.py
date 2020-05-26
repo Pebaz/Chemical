@@ -446,6 +446,17 @@ def fold(self, seed, closure):
         :::python
 
         assert it((1, 2, 3)).fold(1, lambda a, i: a(a._ * i)) == 6
+
+        # These are equivalent:
+        my_ref = Ref(2)
+
+        print(my_ref.val)
+        print(my_ref.get())
+        print(my_ref._)
+
+        my_ref.val = 123
+        my_ref.set(123)
+        my_ref(123)  # Assignment within an expression
     """
     return self.scan(seed, closure).last()
 

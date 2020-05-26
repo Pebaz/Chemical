@@ -121,7 +121,7 @@ def count(self):
 @trait
 def last(self):
     """
-    
+    Returns the last element of an iterator, consuming it.
 
     **Examples**
 
@@ -140,7 +140,7 @@ def last(self):
 @trait('max')
 def max_it(self):
     """
-    
+    Returns the largest item in the iterator, consuming it.
 
     **Examples**
 
@@ -156,7 +156,7 @@ def max_it(self):
 @trait('min')
 def min_it(self):
     """
-    
+    Returns the smallest item in the iterator, consuming it.
 
     **Examples**
 
@@ -172,7 +172,7 @@ def min_it(self):
 @trait
 def max_by_key(self, closure):
     """
-    
+    Uses a function to determine the largest item in an iterator.
 
     **Examples**
 
@@ -194,7 +194,7 @@ def max_by_key(self, closure):
 @trait
 def min_by_key(self, closure):
     """
-    
+    Uses a function to determine the smallest item in an iterator.
 
     **Examples**
 
@@ -216,7 +216,7 @@ def min_by_key(self, closure):
 @trait('sum')
 def sum_it(self):
     """
-    
+    Adds all elements in the iterator together.
 
     **Examples**
 
@@ -232,7 +232,12 @@ def sum_it(self):
 @trait
 def go(self):
     """
-    
+    Consumes the iterator without returning anything.
+
+    Useful for situations in which you want to avoid a large numbers of
+    allocations. For instance, without `go()`, you would have to consume the
+    iterator using a `for` loop, or calling `list(it)`. Either option is less
+    convenient than just using `go()`.
 
     **Examples**
 
@@ -248,7 +253,8 @@ def go(self):
 @trait
 def unzip(self):
     """
-    
+    Returns two lists created from the first and second index of every
+    collection found within the iterator.
 
     **Examples**
 
@@ -271,7 +277,9 @@ def unzip(self):
 @trait
 def cmp(self, other):
     """
-    
+    Lexicographically compares elements of an iterator with those of another.
+
+    Essentially, this compares the length of one iterator with another.
 
     **Examples**
 
@@ -291,7 +299,7 @@ def cmp(self, other):
 @trait
 def gt(self, other):
     """
-    
+    Returns if an iterator is lexicographically longer than another.
 
     **Examples**
 
@@ -306,7 +314,7 @@ def gt(self, other):
 @trait
 def ge(self, other):
     """
-    
+    Returns if an iterator is lexicographically longer/equal to another.
 
     **Examples**
 
@@ -321,7 +329,7 @@ def ge(self, other):
 @trait
 def lt(self, other):
     """
-    
+    Returns if an iterator is lexicographically shorter than another.
 
     **Examples**
 
@@ -336,7 +344,7 @@ def lt(self, other):
 @trait
 def le(self, other):
     """
-    
+    Returns if an iterator is lexicographically shorter/equal to another.
 
     **Examples**
 
@@ -351,7 +359,7 @@ def le(self, other):
 @trait
 def cmp_by(self, other, closure):
     """
-    
+    Checks if this iterator is equal with another using a comparison function.
 
     **Examples**
 
@@ -387,7 +395,8 @@ def cmp_by(self, other, closure):
 @trait
 def eq(self, other):
     """
-    
+    Returns if the elements of this iterator are equal to another, consuming
+    them both.
 
     **Examples**
 
@@ -404,7 +413,8 @@ def eq(self, other):
 @trait
 def neq(self, other):
     """
-    
+    Returns if the elements of this iterator are not equal to another, consuming
+    them both.
 
     **Examples**
 
@@ -419,7 +429,9 @@ def neq(self, other):
 @trait
 def find(self, closure):
     """
-    
+    Uses a function to search for an item if it exists and returns the item.
+
+    The function should return True if the item is found.
 
     **Examples**
 
@@ -440,7 +452,9 @@ def find(self, closure):
 @trait
 def position(self, closure):
     """
-    
+    Uses a function to obtain the index of an element within an iterator.
+
+    The function should return True if the item is found.
 
     **Examples**
 
@@ -460,7 +474,8 @@ def position(self, closure):
 @trait
 def partition(self, closure):
     """
-    
+    Takes a Lambda that returns a boolean and returns two lists containing the
+    items that returned `True` and the items that returned `False`.
 
     **Examples**
 
@@ -489,7 +504,7 @@ def partition(self, closure):
 @trait
 def is_sorted(self):
     """
-    
+    Returns `True` if the iterator is sorted, consuming it.
 
     **Examples**
 
@@ -505,7 +520,7 @@ def is_sorted(self):
 @trait
 def product(self):
     """
-    
+    Multiplies all the elements together, consuming the iterator.
 
     **Examples**
 

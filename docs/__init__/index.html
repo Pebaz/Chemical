@@ -1424,6 +1424,13 @@ without consuming it.</p>
 
     
   
+    <div class="desc"><p>Lexicographically compares elements of an iterator with those of another.</p>
+<p>Essentially, this compares the length of one iterator with another.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cmp</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span> <span class="o">==</span> <span class="n">Ordering</span><span class="o">.</span><span class="n">Equal</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cmp</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span> <span class="o">==</span> <span class="n">Ordering</span><span class="o">.</span><span class="n">Less</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cmp</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="o">==</span> <span class="n">Ordering</span><span class="o">.</span><span class="n">Greater</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.cmp', this);">Show source &equiv;</a></p>
   <div id="source-__init__.cmp" class="source">
@@ -1446,6 +1453,12 @@ without consuming it.</p>
 
     
   
+    <div class="desc"><p>Checks if this iterator is equal with another using a comparison function.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="n">func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cmp_by</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;bsdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cmp_by</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.cmp_by', this);">Show source &equiv;</a></p>
   <div id="source-__init__.cmp_by" class="source">
@@ -1468,6 +1481,17 @@ without consuming it.</p>
 
     
   
+    <div class="desc"><p>Consumes the iterator and returns a collection of the given type.</p>
+<p>Special handling is given to the <code>str</code> type. <code>__str__()</code> is called on each
+element and then the resulting list of strings are concatenated together to
+form one string.</p>
+<p>All other collections are formed by passing the iterator to the constructor.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="nb">tuple</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">}</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;abc&#39;</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.collect', this);">Show source &equiv;</a></p>
   <div id="source-__init__.collect" class="source">
@@ -1490,6 +1514,17 @@ without consuming it.</p>
 
     
   
+    <div class="desc"><p>Returns the length of the iterator, consuming it.</p>
+<p>Unfortunately, a <code>__len__()</code> method cannot be added to <code>it</code> because loops
+such as <code>for</code> will call it if it exists, which will consume the iterator
+before it even runs the loop.</p>
+<p>However, it is better than no <code>__len__()</code> method exists because the length
+of an iterator is seldom known. See also <code>size_hint()</code>.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.count', this);">Show source &equiv;</a></p>
   <div id="source-__init__.count" class="source">
@@ -1512,6 +1547,14 @@ without consuming it.</p>
 
     
   
+    <div class="desc"><p>Returns if the elements of this iterator are equal to another, consuming
+them both.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;asdfasdfasdfasdf&#39;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;sdf&#39;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">))</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.eq', this);">Show source &equiv;</a></p>
   <div id="source-__init__.eq" class="source">
@@ -1561,6 +1604,12 @@ without consuming it.</p>
 
     
   
+    <div class="desc"><p>Uses a function to search for an item if it exists and returns the item.</p>
+<p>The function should return True if the item is found.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rev</span><span class="p">()</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.find', this);">Show source &equiv;</a></p>
   <div id="source-__init__.find" class="source">
@@ -1631,6 +1680,17 @@ assign and dereference in the same expression like this:
 <code>my_ref(my_ref._ + 1)</code></p>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">fold</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="n">a</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">_</span> <span class="o">*</span> <span class="n">i</span><span class="p">))</span> <span class="o">==</span> <span class="mi">6</span>
+
+<span class="c1"># These are equivalent:</span>
+<span class="n">my_ref</span> <span class="o">=</span> <span class="n">Ref</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">my_ref</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_ref</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_ref</span><span class="o">.</span><span class="n">_</span><span class="p">)</span>
+
+<span class="n">my_ref</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="mi">123</span>
+<span class="n">my_ref</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">my_ref</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>  <span class="c1"># Assignment within an expression</span>
 </pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.fold', this);">Show source &equiv;</a></p>
@@ -1682,6 +1742,11 @@ assign and dereference in the same expression like this:
 
     
   
+    <div class="desc"><p>Returns if an iterator is lexicographically longer/equal to another.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">ge</span><span class="p">(</span><span class="s1">&#39;asd&#39;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cycle</span><span class="p">()</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">ge</span><span class="p">(</span><span class="s1">&#39;asd&#39;</span><span class="p">)</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.ge', this);">Show source &equiv;</a></p>
   <div id="source-__init__.ge" class="source">
@@ -1704,6 +1769,16 @@ assign and dereference in the same expression like this:
 
     
   
+    <div class="desc"><p>Consumes the iterator without returning anything.</p>
+<p>Useful for situations in which you want to avoid a large numbers of
+allocations. For instance, without <code>go()</code>, you would have to consume the
+iterator using a <code>for</code> loop, or calling <code>list(it)</code>. Either option is less
+convenient than just using <code>go()</code>.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="n">seen</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">it</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">inspect</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">seen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span><span class="o">.</span><span class="n">go</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">seen</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">]</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.go', this);">Show source &equiv;</a></p>
   <div id="source-__init__.go" class="source">
@@ -1726,6 +1801,11 @@ assign and dereference in the same expression like this:
 
     
   
+    <div class="desc"><p>Returns if an iterator is lexicographically longer than another.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="s1">&#39;asd&#39;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cycle</span><span class="p">()</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="s1">&#39;asd&#39;</span><span class="p">)</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.gt', this);">Show source &equiv;</a></p>
   <div id="source-__init__.gt" class="source">
@@ -1748,6 +1828,11 @@ assign and dereference in the same expression like this:
 
     
   
+    <div class="desc"><p>Returns <code>True</code> if the iterator is sorted, consuming it.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">is_sorted</span><span class="p">()</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="n">it</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">is_sorted</span><span class="p">()</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.is_sorted', this);">Show source &equiv;</a></p>
   <div id="source-__init__.is_sorted" class="source">
@@ -1770,6 +1855,12 @@ assign and dereference in the same expression like this:
 
     
   
+    <div class="desc"><p>Returns the last element of an iterator, consuming it.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;c&#39;</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;c&#39;</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cycle</span><span class="p">()</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;b&#39;</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.last', this);">Show source &equiv;</a></p>
   <div id="source-__init__.last" class="source">
@@ -1792,6 +1883,11 @@ assign and dereference in the same expression like this:
 
     
   
+    <div class="desc"><p>Returns if an iterator is lexicographically shorter/equal to another.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;as&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="s1">&#39;asd&#39;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cycle</span><span class="p">()</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="s1">&#39;asdfa&#39;</span><span class="p">)</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.le', this);">Show source &equiv;</a></p>
   <div id="source-__init__.le" class="source">
@@ -1814,6 +1910,11 @@ assign and dereference in the same expression like this:
 
     
   
+    <div class="desc"><p>Returns if an iterator is lexicographically shorter than another.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lt</span><span class="p">(</span><span class="s1">&#39;asddfas&#39;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cycle</span><span class="p">()</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">lt</span><span class="p">(</span><span class="s1">&#39;asdfas&#39;</span><span class="p">)</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.lt', this);">Show source &equiv;</a></p>
   <div id="source-__init__.lt" class="source">
@@ -1836,6 +1937,11 @@ assign and dereference in the same expression like this:
 
     
   
+    <div class="desc"><p>Uses a function to determine the largest item in an iterator.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">max_by_key</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">max_by_key</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.max_by_key', this);">Show source &equiv;</a></p>
   <div id="source-__init__.max_by_key" class="source">
@@ -1858,6 +1964,11 @@ assign and dereference in the same expression like this:
 
     
   
+    <div class="desc"><p>Uses a function to determine the smallest item in an iterator.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">min_by_key</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">min_by_key</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.min_by_key', this);">Show source &equiv;</a></p>
   <div id="source-__init__.min_by_key" class="source">
@@ -1880,6 +1991,12 @@ assign and dereference in the same expression like this:
 
     
   
+    <div class="desc"><p>Returns if the elements of this iterator are not equal to another, consuming
+them both.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">neq</span><span class="p">(</span><span class="s1">&#39;asdf1&#39;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">neq</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.neq', this);">Show source &equiv;</a></p>
   <div id="source-__init__.neq" class="source">
@@ -1902,6 +2019,19 @@ assign and dereference in the same expression like this:
 
     
   
+    <div class="desc"><p>Returns the nth element from an iterator.</p>
+<p>If 3 is passed, this returns the 3rd element, and so on.</p>
+<p>If a negative number is passed, this is the equivalent of the following:</p>
+<div class="codehilite"><pre><span></span><span class="n">itr</span> <span class="o">=</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">itr</span><span class="o">.</span><span class="n">nth</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">itr</span><span class="o">.</span><span class="n">rev</span><span class="p">()</span><span class="o">.</span><span class="n">nth</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">nth</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;c&#39;</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">nth</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;c&#39;</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cycle</span><span class="p">()</span><span class="o">.</span><span class="n">nth</span><span class="p">(</span><span class="mi">23</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;b&#39;</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.nth', this);">Show source &equiv;</a></p>
   <div id="source-__init__.nth" class="source">
@@ -1980,8 +2110,23 @@ processed concurrently.</p>
 
     
   
-    <div class="desc"><p>This is a code example:</p>
-<p><code>asdf.asdf()</code></p></div>
+    <div class="desc"><p>Takes a Lambda that returns a boolean and returns two lists containing the
+items that returned <code>True</code> and the items that returned <code>False</code>.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span>
+    <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;aSdF&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span>
+    <span class="p">[</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">it</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">rev</span><span class="p">()</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span>
+    <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;aSdF&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rev</span><span class="p">()</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span>
+    <span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.partition', this);">Show source &equiv;</a></p>
   <div id="source-__init__.partition" class="source">
@@ -2004,6 +2149,12 @@ processed concurrently.</p>
 
     
   
+    <div class="desc"><p>Uses a function to obtain the index of an element within an iterator.</p>
+<p>The function should return True if the item is found.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="s1">&#39;asdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rev</span><span class="p">()</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.position', this);">Show source &equiv;</a></p>
   <div id="source-__init__.position" class="source">
@@ -2026,6 +2177,11 @@ processed concurrently.</p>
 
     
   
+    <div class="desc"><p>Multiplies all the elements together, consuming the iterator.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="k">assert</span> <span class="n">it</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">product</span><span class="p">()</span> <span class="o">==</span> <span class="mi">6</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">product</span><span class="p">()</span> <span class="o">==</span> <span class="o">-</span><span class="mi">6</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.product', this);">Show source &equiv;</a></p>
   <div id="source-__init__.product" class="source">
@@ -2202,6 +2358,12 @@ and the return value from the closure.</p>
 
     
   
+    <div class="desc"><p>Returns two lists created from the first and second index of every
+collection found within the iterator.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="n">gold</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">)],</span> <span class="p">[</span><span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="k">assert</span> <span class="n">it</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">))</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">unzip</span><span class="p">()</span> <span class="o">==</span> <span class="n">gold</span>
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-__init__.unzip', this);">Show source &equiv;</a></p>
   <div id="source-__init__.unzip" class="source">
