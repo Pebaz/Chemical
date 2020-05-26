@@ -258,6 +258,9 @@ def test_nth():
     assert it('abc').skip(1).rev().nth(-2) == 'c'
     assert it('abc').cycle().rev().nth(-23) == 'b'
 
+    with pytest.raises(ChemicalException):
+        it('asdf').nth(0)
+
 
 def test_step():
     assert it('abcdef').step_by(1).collect() == ['a', 'b', 'c', 'd', 'e', 'f']
