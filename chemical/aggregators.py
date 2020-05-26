@@ -93,7 +93,14 @@ def nth(self, num):
 @trait
 def count(self):
     """
-    
+    Returns the length of the iterator, consuming it.
+
+    Unfortunately, a `__len__()` method cannot be added to `it` because loops
+    such as `for` will call it if it exists, which will consume the iterator
+    before it even runs the loop.
+
+    However, it is better than no `__len__()` method exists because the length
+    of an iterator is seldom known. See also `size_hint()`.
 
     **Examples**
 
@@ -105,7 +112,10 @@ def count(self):
     """
     # NOTE(pebaz): `it.__len__` can never exist because list(), etc. would try
     # to use it, which would consume it.
-    return len(list(self))
+    index = 0
+    for _ in self:
+        index += 1
+    return index
 
 
 @trait
