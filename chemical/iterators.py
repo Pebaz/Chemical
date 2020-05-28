@@ -579,3 +579,44 @@ def par_iter(self):
     next(backward)
 
     return it(forward, backward, self.size_hint())
+
+
+
+@trait
+def graft(self, other):
+    """
+    Can be used on a (modified) iterator to return the elements of another
+    iterator before the elements of the original.
+
+    **Examples**
+
+        :::python
+        assert it('ab').graft('!').collect(str) == '!ab'
+        itr = it('ab')
+        assert itr.next() == 'a'
+        assert itr.graft('!').collect(str) == '!b'
+    """
+    return it(other).chain(self)
+
+
+
+@trait
+class Graft(it):
+    def __init__(self, items, other):
+        it.__init__(self, it(other).chain(items))
+        self.other = other
+        self.next_count = 0
+        self.reverse = it(other).rev().chain(items).rev()
+
+    def __next__(self):
+        return self.__get_next__()
+
+    def __get_next__(self):
+        self.next_count += 1
+        return next(self.items)
+
+    def __get_reversed__(self):
+        for i in range(self.next_count):
+            next(self.reverse)
+        #return it(self.other, self.items).chain(self.reverse)
+        return self.reverse
