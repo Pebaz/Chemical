@@ -121,6 +121,11 @@ def test_peekable():
     assert it('asdf').peekable().size_hint() == (4, 4)
     assert it('asdf').peekable().rev().size_hint() == (4, 4)
 
+    assert not it('').peekable().has_next()
+    assert not it([]).peekable().has_next()
+    assert it('a').peekable().has_next()
+    assert not it('abc').skip_while(lambda x: x in 'abc').peekable().has_next()
+
 
 def test_max():
     assert it([1]).max() == 1

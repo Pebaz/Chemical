@@ -161,6 +161,14 @@ class Peekable(it):
         it.__init__(self, items)
         self.ahead = None
         self.done = False
+        self.can_peek = True
+
+    def has_next(self):
+        try:
+            self.peek()
+        except NothingToPeek:
+            self.can_peek = False
+        return self.can_peek
 
     def peek(self):
         if self.done:
@@ -170,6 +178,7 @@ class Peekable(it):
             try:
                 self.ahead = next(self.items)
             except StopIteration as e:
+                #self.done = True
                 raise NothingToPeek().with_traceback(e.__traceback__) from e
 
         return self.ahead
@@ -181,8 +190,8 @@ class Peekable(it):
         try:
             if not self.ahead:
                 self.ahead = next(self.items)
-        except StopIteration:
-            ...
+        except StopIteration as e:
+            pass
 
         ret = self.ahead
         try:
@@ -596,7 +605,11 @@ def graft(self, other):
         assert itr.next() == 'a'
         assert itr.graft('!').collect(str) == '!b'
     """
-    return it(other).chain(self)
+    #return it(other).chain(self)
+    return it(
+        it(other).chain(self),
+        self.rev().chain(other)
+    )
 
 
 
@@ -606,7 +619,8 @@ class Graft(it):
         it.__init__(self, it(other).chain(items))
         self.other = other
         self.next_count = 0
-        self.reverse = it(other).rev().chain(items).rev()
+        #self.reverse = it(other).rev().chain(items).rev()
+        self.reverse = it(items).rev().chain(other)
 
     def __next__(self):
         return self.__get_next__()
