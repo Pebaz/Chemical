@@ -780,15 +780,3 @@ def test_par_iter():
 
     assert it('asdf').par_iter().size_hint() == (4, 4)
     assert it('asdf').par_iter().rev().size_hint() == (4, 4)
-
-
-def test_graft():
-    assert it('ab').graft('!').collect(str) == '!ab'
-    itr = it('ab')
-    assert itr.next() == 'a'
-    assert itr.graft('!').collect(str) == '!b'
-
-    assert it('ab').graft('!').rev().collect(str) == 'ba!'
-    itr = it('ab')
-    assert itr.next() == 'a'
-    assert itr.graft('!').rev().collect(str) == 'b!'
