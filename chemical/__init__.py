@@ -134,7 +134,7 @@ def trait(bind=None):
 
     it.traits[bind.__name__.lower()] = bind
     inner.__doc__ = bind.__doc__
-    return inner
+    return bind
 
 
 class Ordering(Enum):

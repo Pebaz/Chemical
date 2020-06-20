@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
 	name='chemical',
-	version='1.0.0',
+	version='1.0.1',
 	license="MIT",
 	python_requires='>=3.6.0',
 	description='Rust-style iterators for Python!',

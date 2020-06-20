@@ -780,3 +780,42 @@ def test_par_iter():
 
     assert it('asdf').par_iter().size_hint() == (4, 4)
     assert it('asdf').par_iter().rev().size_hint() == (4, 4)
+
+
+def test_current():
+    assert it(range(4)).current().collect(str) == '0123'
+    assert (it(range(100))
+        .skip(10)
+        .step_by(5)
+        .skip(10)
+        .current()
+        .skip_while(lambda x: x < 80)
+        .take(4)
+        .collect()
+    ) == [80, 85, 90, 95]
+
+    assert it(range(10)).current().rev().collect() == [
+        9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+    ]
+
+    with pytest.raises(ChemicalException):
+        a = it('asdf').current()
+        a.next()
+        a.rev()
+
+    assert it('asdf').current().size_hint() == (4, 4)
+    assert it('asdf').current().rev().size_hint() == (4, 4)
+
+    c = it('asdf').current()
+    assert c.curr() == 'a'
+    assert c.peek() == 'a'
+    assert c.next() == 'a'
+    assert c.curr() == 'a'
+    assert c.peek() == 's'
+    assert c.next() == 's'
+    assert c.curr() == 's'
+    assert c.peek() == 'd'
+    assert c.next() == 'd'
+    assert c.curr() == 'd'
+    assert c.peek() == 'f'
+    assert c.next() == 'f'

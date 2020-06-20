@@ -588,3 +588,41 @@ def par_iter(self):
     next(backward)
 
     return it(forward, backward, self.size_hint())
+
+
+@trait
+class Current(Peekable):
+    """
+    An iterator that lets you look at the current item in the iteration.
+
+    Essentially holds onto the last item yielded from `next()`. Works like a
+    call to `peek()` but for the current element.
+
+    Extends `Peekable` to retain `next()`, `curr()`, and `peek()` methods.
+
+    For the first element, `curr()` behaves exactly like `peek()`.
+
+    **Examples**
+
+        :::python
+
+        c = it('asdf').current()
+        assert c.curr() == 'a'
+        assert c.peek() == 'a'
+        assert c.next() == 'a'
+        assert c.curr() == 'a'
+        assert c.peek() == 's'
+        assert c.next() == 's'
+    """
+    def __init__(self, items):
+        Peekable.__init__(self, items)
+        self.current_item = None
+
+    def __next__(self):
+        self.current_item = Peekable.__next__(self)
+        return self.current_item
+
+    def curr(self):
+        if not self._modified:
+            return self.peek()
+        return self.current_item
