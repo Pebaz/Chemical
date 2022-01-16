@@ -1,3 +1,7 @@
+<p align=center>
+    <img src="misc/Chemical.png" alt="Chemical Logo: Composable Iterators" width=60%>
+</p>
+
 # Chemical
 
 Rust-Style Iterators in Python!
