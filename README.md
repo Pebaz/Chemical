@@ -42,7 +42,7 @@ c
 11
 
 >>> # Large Chemical compositions can span multiple lines using parentheses:
->>> (it(range(100)
+>>> (it(range(100))
 ...      .skip(10)
 ...      .take(10)
 ...      .rev()
