@@ -39,7 +39,17 @@ class It:
             if index == len(collection):
                 return
 
+    # TODO(pbz): If the instructions are defined on the class, do user's care?
+    def skip(self, amount):
+        # The utility of this is to validate parameters at first call when
+        # building the iterator chain and then when actually iterating, perform
+        # the instruction
+        if not self.iterating:
+            return
+
 # Syntax example: it([1, 2, 3])( ??? )
+# Exception.with_traceback()
+# How can users implement their own iterators or aggregators?
 
 it = It([1, 2, 3, 4, 5])
 it = it.skip(1).step_by(2).take(2)
